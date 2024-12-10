@@ -16,7 +16,7 @@ Bem-vindo ao **Utilltys**, um site repleto de ferramentas úteis para facilitar 
 
 Acesse o site **Utilltys** e utilize as ferramentas diretamente, sem necessidade de cadastro ou download. Clique na ferramenta desejada para começar a usar:
 
-- [Acesse o Utilltys aqui](Utillitys)(https://akiradv.github.io/utillitys).
+- [Acesse o Utilltys aqui](https://akiradv.github.io/utillitys).
 
 ## Tecnologias Utilizadas
 
