@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificador de Ortografia</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main>
+        <h1>Verificador de Ortografia</h1>
+        <p class="api-info">Usamos a API do <a href="https://languagetool.org/" target="_blank">LanguageTool</a> para verificar a ortografia. (Pode haver erros!)</p>
+        <textarea id="text-input" rows="10" cols="50" placeholder="Digite seu texto aqui..."></textarea>
+        <button id="check-button" class="btn">Verificar Ortografia</button>
+        <div id="result"></div>
+        
+        <!-- Botão de Voltar -->
+        <button class="btn voltar" onclick="window.location.href='index.html'">Voltar para a Página Inicial</button>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Utillitys. Desenvolvido com ❤️ por <a href="https://github.com/akiradv" target="_blank">AkiraDev</a> </p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

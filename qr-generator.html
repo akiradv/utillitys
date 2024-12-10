@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de QR Code - Utillitys</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main>
+        <h1>Gerador de QR Code</h1>
+        <input type="text" id="qr-input" placeholder="Digite algo aqui" />
+        <button id="generate-qr-code">Gerar QR Code</button>
+        <div id="qr-code"></div>
+
+        <button class="btn voltar" onclick="window.location.href='index.html'">Voltar</button>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Utillitys. Desenvolvido com ❤️ por <a href="https://github.com/akiradv" target="_blank">AkiraDev</a></p>
+    </footer>
+    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        document.getElementById('generate-qr-code').addEventListener('click', () => {
+            const inputValue = document.getElementById('qr-input').value.trim();
+            const qrCodeDiv = document.getElementById('qr-code');
+
+            if (!inputValue) {
+                alert("Por favor, insira algo no campo de texto!");
+                return;
+            }
+
+            // Limpa qualquer QR Code anterior
+            qrCodeDiv.innerHTML = '';
+
+            // Cria a imagem do QR Code
+            const qrCodeImage = document.createElement('img');
+            qrCodeImage.src = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(inputValue)}&size=200x200`;
+            qrCodeDiv.appendChild(qrCodeImage);
+        });
+    </script>
+</body>
+</html> 

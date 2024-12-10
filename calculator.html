@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora - Utillitys</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <main>
+        <h1>Calculadora</h1>
+        <div class="calculator">
+            <input type="text" id="calcInput" disabled>
+            <div class="calc-buttons">
+                <button onclick="appendToCalc('1')">1</button>
+                <button onclick="appendToCalc('2')">2</button>
+                <button onclick="appendToCalc('3')">3</button>
+                <button onclick="appendToCalc('+')">+</button>
+                <button onclick="appendToCalc('4')">4</button>
+                <button onclick="appendToCalc('5')">5</button>
+                <button onclick="appendToCalc('6')">6</button>
+                <button onclick="appendToCalc('-')">-</button>
+                <button onclick="appendToCalc('7')">7</button>
+                <button onclick="appendToCalc('8')">8</button>
+                <button onclick="appendToCalc('9')">9</button>
+                <button onclick="appendToCalc('*')">*</button>
+                <button onclick="appendToCalc('0')">0</button>
+                <button onclick="calculate()">=</button>
+                <button onclick="clearCalc()">C</button>
+                <button onclick="appendToCalc('/')">/</button>
+            </div>
+        </div>
+        <button class="btn voltar" onclick="window.location.href='index.html'">Voltar</button>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Utillitys. Desenvolvido com ❤️ por <a href="https://github.com/akiradv" target="_blank">AkiraDev</a> </p>
+    </footer>
+
+    <script src="script.js"></script>
+    <div id="notificationsContainer"></div>
+</body>
+</html>
