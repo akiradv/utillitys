@@ -5,12 +5,14 @@ Bem-vindo ao **Utilltys**, um site repleto de ferramentas úteis para facilitar 
 ## Funcionalidades
 
 ### Ferramentas disponíveis:
+- **Calculadora**: Realize cálculos matemáticos básicos diretamente no site.
+- **Gerador de Senha**: Crie senhas fortes e seguras para proteger suas contas.
 - **Verificador de Ortografia**: Corrija seus textos com facilidade e rapidez.
 - **Gerador de QR Code**: Crie códigos QR para links ou textos.
 - **Calculador de Idade**: Descubra sua idade exata em anos, meses, dias, horas e segundos.
 - **Busca de Livros**: Encontre informações detalhadas sobre seus livros favoritos.
-- **Calculadora**: Realize cálculos matemáticos básicos diretamente no site.
-- **Gerador de Senha**: Crie senhas fortes e seguras para proteger suas contas.
+- **Encurtador de URL**: Transforme links longos em URLs curtas e fáceis de compartilhar.
+- **Texto para Voz**: Converta qualquer texto escrito em áudio com suporte para português brasileiro.
 
 ## Como Usar
 
@@ -22,6 +24,12 @@ Acesse o site **Utilltys** e utilize as ferramentas diretamente, sem necessidade
 
 - **HTML5, CSS3 e JavaScript**: Base para o desenvolvimento front-end.
 - **Design Responsivo**: Compatível com dispositivos móveis e desktops.
+- **APIs Integradas**: 
+  - LanguageTool API para verificação ortográfica
+  - Google Books API para busca de livros
+  - TinyURL API para encurtamento de URLs
+  - Web Speech API para conversão de texto em voz
+  - QR Server API para geração de códigos QR
 
 ## Sugestões ou Problemas
 
