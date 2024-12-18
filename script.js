@@ -70,6 +70,102 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
         });
     }
+
+    document.getElementById('shorten-button').addEventListener('click', shortenURL);
+    
+    async function shortenURL() {
+        const urlInput = document.getElementById('url-input').value;
+        const shortenedUrlElement = document.getElementById('shortened-url');
+
+        if (!urlInput) {
+            shortenedUrlElement.textContent = "Por favor, insira uma URL.";
+            return;
+        }
+
+        try {
+            const response = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(urlInput)}`);
+            
+            if (response.ok) {
+                const shortUrl = await response.text();
+                shortenedUrlElement.innerHTML = `
+                    URL Encurtada: <a href="${shortUrl}" target="_blank">${shortUrl}</a>
+                    <button onclick="copyToClipboard('${shortUrl}')" class="btn">Copiar</button>
+                `;
+            } else {
+                shortenedUrlElement.textContent = "Erro ao encurtar a URL. Verifique se a URL é válida.";
+            }
+        } catch (error) {
+            console.error('Erro:', error);
+            shortenedUrlElement.textContent = "Erro ao conectar com o serviço de encurtamento.";
+        }
+    }
+
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text)
+            .then(() => {
+                showNotification("URL copiada com sucesso!", "success");
+            })
+            .catch(() => {
+                showNotification("Erro ao copiar URL", "error");
+            });
+    }
+
+    // Elementos do DOM para texto para fala
+    const textInput = document.getElementById('text-input');
+    const speakButton = document.getElementById('speak-button');
+    const pauseButton = document.getElementById('pause-button');
+    const resumeButton = document.getElementById('resume-button');
+    const stopButton = document.getElementById('stop-button');
+    const rateInput = document.getElementById('rate');
+    const langSelect = document.getElementById('lang');
+
+    let utterance = null; // Objeto de fala
+    let speaking = false;
+
+    // Inicia a fala
+    speakButton.addEventListener('click', () => {
+        const text = textInput.value.trim();
+        if (!text) {
+            alert('Por favor, digite algum texto para falar.');
+            return;
+        }
+
+        // Cancela qualquer fala em andamento
+        window.speechSynthesis.cancel();
+
+        // Configura o SpeechSynthesisUtterance
+        utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = langSelect.value; // Define o idioma selecionado
+        utterance.rate = parseFloat(rateInput.value); // Define a velocidade
+
+        // Eventos opcionais
+        utterance.onstart = () => { speaking = true; };
+        utterance.onend = () => { speaking = false; };
+
+        window.speechSynthesis.speak(utterance);
+    });
+
+    // Pausa a fala
+    pauseButton.addEventListener('click', () => {
+        if (speaking && window.speechSynthesis.speaking) {
+            window.speechSynthesis.pause();
+        }
+    });
+
+    // Retoma a fala
+    resumeButton.addEventListener('click', () => {
+        if (speaking && window.speechSynthesis.paused) {
+            window.speechSynthesis.resume();
+        }
+    });
+
+    // Para a fala
+    stopButton.addEventListener('click', () => {
+        if (speaking) {
+            window.speechSynthesis.cancel();
+            speaking = false;
+        }
+    });
 });
 
 function appendToCalc(value) {
@@ -358,5 +454,16 @@ function calculateBirthYear() {
 // Adiciona o evento de clique para o botão de calcular ano de nascimento
 document.getElementById('calculate-birthyear').addEventListener('click', calculateBirthYear);
 
-// ... código existente ...
+function speak() {
+    const text = document.getElementById("text").value;
+
+    if (text.trim() === "") {
+        showNotification("Por favor, insira algum texto.", "error");
+        return;
+    }
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "pt-BR"; // Idioma: Português do Brasil
+    window.speechSynthesis.speak(utterance);
+}
 
