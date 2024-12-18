@@ -5,12 +5,12 @@ Bem-vindo ao **Utilltys**, um site repleto de ferramentas úteis para facilitar 
 ## Funcionalidades
 
 ### Ferramentas disponíveis:
+- **Calculadora**: Realize cálculos matemáticos básicos diretamente no site.
+- **Gerador de Senha**: Crie senhas fortes e seguras para proteger suas contas.
 - **Verificador de Ortografia**: Corrija seus textos com facilidade e rapidez.
 - **Gerador de QR Code**: Crie códigos QR para links ou textos.
 - **Calculador de Idade**: Descubra sua idade exata em anos, meses, dias, horas e segundos.
 - **Busca de Livros**: Encontre informações detalhadas sobre seus livros favoritos.
-- **Calculadora**: Realize cálculos matemáticos básicos diretamente no site.
-- **Gerador de Senha**: Crie senhas fortes e seguras para proteger suas contas.
 
 ## Como Usar
 
