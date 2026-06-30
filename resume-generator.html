@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Currículo - Utillitys</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Gerador de Currículo</h1>
+        <a href="index.html" class="voltar" style="text-decoration:none;">← Voltar</a>
+    </header>
+    <main>
+        <form id="resume-form" class="resume-form">
+            <div class="form-group">
+                <label>Nome completo</label>
+                <input type="text" id="nome" placeholder="Seu nome" required>
+            </div>
+            <div class="form-group">
+                <label>E-mail</label>
+                <input type="email" id="email" placeholder="email@exemplo.com" required>
+            </div>
+            <div class="form-group">
+                <label>Telefone</label>
+                <input type="tel" id="telefone" placeholder="(11) 99999-9999">
+            </div>
+            <div class="form-group">
+                <label>Endereço (cidade/UF)</label>
+                <input type="text" id="endereco" placeholder="São Paulo, SP">
+            </div>
+            <div class="form-group">
+                <label>Resumo profissional</label>
+                <textarea id="resumo" rows="3" placeholder="Breve resumo sobre você..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Experiência (empresa, cargo, período)</label>
+                <textarea id="experiencia" rows="4" placeholder="Ex: Empresa X - Desenvolvedor (2020-2023)"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Formação acadêmica</label>
+                <textarea id="formacao" rows="3" placeholder="Ex: Universidade Y - Bacharelado em ..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Habilidades (separadas por vírgula)</label>
+                <input type="text" id="habilidades" placeholder="JavaScript, React, Python...">
+            </div>
+            <button type="button" onclick="gerarCurriculo()">Gerar Currículo</button>
+        </form>
+
+        <div id="resume-preview" class="resume-preview" style="display:none;">
+            <h2>Visualização do Currículo</h2>
+            <div id="resume-content"></div>
+            <button onclick="imprimirCurriculo()" class="btn">🖨️ Imprimir / Salvar PDF</button>
+            <button onclick="voltarFormulario()" class="btn voltar">Voltar ao formulário</button>
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>

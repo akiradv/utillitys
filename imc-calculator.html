@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora IMC - Utillitys</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main>
+    <h1>Calculadora IMC</h1>
+    <div class="calculator-container"> <!-- nova div para estilizar -->
+        <div class="input-group">
+            <label>Peso (kg): <input type="number" id="peso" placeholder="Ex: 70"></label>
+        </div>
+        <div class="input-group">
+            <label>Altura (m): <input type="number" id="altura" placeholder="Ex: 1.75" step="0.01"></label>
+        </div>
+        <button onclick="calculateIMC()">Calcular IMC</button>
+        <div id="resultado-imc" class="resultado"></div>
+    </div>
+    <button class="voltar" onclick="window.location.href='index.html'">Voltar</button>
+</main>
+    
+    <footer>
+        <p>&copy; 2026 Utillitys. Desenvolvido com ❤️ por <a href="https://github.com/akiradv" target="_blank">AkiraDev</a> </p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
