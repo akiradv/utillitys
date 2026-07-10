@@ -3,21 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conversor de Texto para Voz</title>
+    <title>Texto para Voz - Utillitys</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="/manifest.json">
 </head>
 <body>
     <header>
-        <h1>Conversor de Texto para Voz</h1>
-        <button class="btn voltar" onclick="window.location.href='index.html'">Voltar</button>
+        <h1>🗣️ Texto para Voz</h1>
+        <a href="index.html" class="btn-sobre" style="text-decoration:none;">← Voltar</a>
     </header>
     <main>
-        <textarea id="text" placeholder="Digite algo aqui..."></textarea>
-        <button class="btn" onclick="speak()">Falar</button>
+        <div class="tts-container">
+            <div class="tts-box">
+                <!-- Aviso -->
+                <div class="tts-notice">
+                    ⚠️ A síntese de voz funciona <strong>melhor em inglês</strong>, mas também suporta português e outros idiomas.
+                </div>
+
+                <div class="input-group">
+                    <label>Digite o texto:</label>
+                    <textarea id="tts-text" rows="4" placeholder="Digite aqui o texto que deseja ouvir..."></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label>Idioma:</label>
+                    <select id="tts-lang">
+                        <option value="pt-BR">Português (Brasil)</option>
+                        <option value="en-US" selected>Inglês (EUA)</option>
+                        <option value="es-ES">Espanhol</option>
+                        <option value="fr-FR">Francês</option>
+                        <option value="de-DE">Alemão</option>
+                        <option value="it-IT">Italiano</option>
+                        <option value="ja-JP">Japonês</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Velocidade:</label>
+                    <input type="range" id="tts-rate" min="0.5" max="2" step="0.1" value="1">
+                    <span id="rate-label">1.0x</span>
+                </div>
+
+                <div class="tts-controls">
+                    <button id="tts-speak" class="btn">▶ Falar</button>
+                    <button id="tts-stop" class="btn" style="background:#e74c3c;">⏹ Parar</button>
+                </div>
+
+                <button id="tts-download" class="btn" style="background:#2ecc71; color:#000; display:none;">⬇ Baixar Áudio (MP3)</button>
+
+                <div id="tts-status" class="tts-status"></div>
+            </div>
+        </div>
+        <button class="voltar" onclick="window.location.href='index.html'">Voltar</button>
     </main>
     <footer>
         <p>&copy; 2026 Utillitys. Desenvolvido com ❤️ por <a href="https://github.com/akiradv" target="_blank">AkiraDev</a></p>
     </footer>
     <script src="script.js"></script>
 </body>
-</html> 
+</html>

@@ -5,25 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sobre - Utillitys</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Utillitys">
+    <link rel="apple-touch-icon" href="images/icon-192.png">
 </head>
 <body>
     <header>
         <h1>Utillitys</h1>
-        <a href="index.html" class="voltar" style="text-decoration:none;">← Voltar</a>
+        <a href="index.html" class="btn-sobre" style="text-decoration:none;">← Voltar</a>
     </header>
     <main>
         <h2>Sobre o Utillitys</h2>
         <div class="about-container">
-            <p><strong>Utillitys</strong> é um conjunto de ferramentas úteis desenvolvido para facilitar tarefas do dia a dia.</p>
-            <p>Atualmente conta com: calculadora, gerador de senhas, corretor ortográfico, gerador de QR Code, calculadora de idade, busca de livros, texto para fala, encurtador de URLs e calculadora IMC.</p>
+            <p><strong>Utillitys</strong> é um conjunto de ferramentas úteis desenvolvido para facilitar tarefas do dia a dia. Criado em 2024, o projeto cresceu e hoje oferece uma variedade de funcionalidades.</p>
+            <p>Atualmente conta com as seguintes ferramentas (clique para acessar):</p>
+            <ul class="about-tools-list">
+                <!-- Página inicial -->
+                <li><a href="index.html"><i class="fas fa-home"></i> Página Inicial</a></li>
+                <!-- Ferramentas (ordem alfabética) -->
+                <li><a href="age-calculator.html"><i class="fas fa-calendar-alt"></i> Calculadora de Idade</a></li>
+                <li><a href="imc-calculator.html"><i class="fas fa-weight"></i> Calculadora IMC</a></li>
+                <li><a href="calculator.html"><i class="fas fa-calculator"></i> Calculadora Simples</a></li>
+                <li><a href="ortografia.html"><i class="fas fa-spell-check"></i> Corretor Ortográfico</a></li>
+                <li><a href="currency-converter.html"><i class="fas fa-exchange-alt"></i> Conversor de Moedas</a></li>
+                <li><a href="url-shortener.html"><i class="fas fa-link"></i> Encurtador de URLs</a></li>
+                <li><a href="book-search.html"><i class="fas fa-book"></i> Busca de Livros</a></li>
+                <li><a href="password-generator.html"><i class="fas fa-key"></i> Gerador de Senhas</a></li>
+                <li><a href="qr-generator.html"><i class="fas fa-qrcode"></i> Gerador de QR Code</a></li>
+                <li><a href="resume-generator.html"><i class="fas fa-file-alt"></i> Gerador de Currículo</a></li>
+                <li><a href="world-clock.html"><i class="fas fa-globe"></i> Relógio Mundial</a></li>
+                <li><a href="text-to-speech.html"><i class="fas fa-volume-up"></i> Texto para Voz</a></li>
+            </ul>
             <p>Projeto open-source no <a href="https://github.com/akiradv/utillitys" target="_blank">GitHub</a>.</p>
-            <p>Tecnologias: HTML5, CSS3, JavaScript puro, APIs gratuitas (Google Books, LanguageTool, TinyURL).</p>
+            <p>Tecnologias: HTML5, CSS3, JavaScript puro, APIs gratuitas (Open Library, LanguageTool, TinyURL, Web Speech API, ExchangeRate-API).</p>
             <p>Feito com ❤️ por <a href="https://github.com/akiradv" target="_blank">akiradv</a>.</p>
         </div>
         <button class="voltar" onclick="window.location.href='index.html'">Voltar</button>
     </main>
     <footer>
-        <p>&copy; 2026 Utillitys. Desenvolvido com ❤️ por <a href="https://github.com/akiradv" target="_blank">AkiraDev</a> </p>
+        <p>&copy; 2026 Utillitys. Desenvolvido com ❤️ por <a href="https://github.com/akiradv" target="_blank">AkiraDev</a></p>
     </footer>
 </body>
 </html>

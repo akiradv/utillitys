@@ -1,21 +1,24 @@
 {
   "name": "Utillitys - Ferramentas Úteis",
   "short_name": "Utillitys",
-  "description": "Conjunto de ferramentas úteis para o dia a dia",
+  "description": "Kit de ferramentas para o dia a dia: calculadora, gerador de senhas, IMC, relógio, currículo e muito mais.",
   "start_url": "/",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#121212",
   "theme_color": "#ff5722",
   "icons": [
     {
       "src": "images/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "images/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }

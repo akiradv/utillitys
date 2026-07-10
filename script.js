@@ -29,46 +29,73 @@ document.addEventListener('DOMContentLoaded', () => {
         futureAgeButton.addEventListener('click', calculateFutureAge);
     }
 
-    // === Busca de Livros ===
-    const searchButton = document.getElementById('search-button');
-    if (searchButton) {
-        searchButton.addEventListener('click', function() {
-            const title = document.getElementById('book-title').value;
-            const resultsDiv = document.getElementById('results');
+// === Busca de Livros (Open Library - Corrigido) ===
+const searchButton = document.getElementById('search-button');
+if (searchButton) {
+    searchButton.addEventListener('click', function() {
+        const title = document.getElementById('book-title').value.trim();
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = '<p>🔍 Buscando...</p>';
+
+        if (!title) {
+            alert("Por favor, insira um título de livro!");
             resultsDiv.innerHTML = '';
+            return;
+        }
 
-            if (!title) {
-                alert("Por favor, insira um título de livro!");
-                return;
+        // Construindo a URL sem o parâmetro 'limit' para evitar o erro 422
+        const url = `https://openlibrary.org/search.json?q=${encodeURIComponent(title)}`;
+
+        fetch(url, {
+            headers: {
+                'User-Agent': 'Utillitys-App/1.0' // <- Essencial para evitar bloqueios
             }
+        })
+        .then(response => {
+            if (!response.ok) {
+                // Se o status for 422, tenta novamente sem parâmetros extras
+                if (response.status === 422) {
+                    throw new Error('A API do Open Library rejeitou a requisição. Tente um termo de busca mais simples.');
+                }
+                throw new Error(`Erro na API: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            resultsDiv.innerHTML = '';
+            if (data.docs && data.docs.length > 0) {
+                data.docs.forEach(book => {
+                    const bookElement = document.createElement('div');
+                    bookElement.className = 'book-item';
 
-            fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(title)}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.items) {
-                        data.items.forEach(item => {
-                            const bookInfo = item.volumeInfo;
-                            const bookElement = document.createElement('div');
-                            bookElement.className = 'book-item';
-                            bookElement.innerHTML = `
-                                <img src="${bookInfo.imageLinks ? bookInfo.imageLinks.thumbnail : 'https://via.placeholder.com/200x300?text=Sem+Imagem'}" alt="${bookInfo.title}">
-                                <h3>${bookInfo.title}</h3>
-                                <p>Autores: ${bookInfo.authors ? bookInfo.authors.join(', ') : 'Desconhecido'}</p>
-                                <p>${bookInfo.description ? bookInfo.description : 'Sem descrição disponível.'}</p>
-                                <a href="${bookInfo.infoLink}" target="_blank">Mais informações</a>
-                            `;
-                            resultsDiv.appendChild(bookElement);
-                        });
-                    } else {
-                        resultsDiv.innerHTML = '<p>Nenhum livro encontrado.</p>';
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro ao buscar livros:', error);
-                    resultsDiv.innerHTML = '<p>Erro ao buscar livros. Tente novamente mais tarde.</p>';
+                    const coverId = book.cover_i;
+                    const coverUrl = coverId 
+                        ? `https://covers.openlibrary.org/b/id/${coverId}-M.jpg` 
+                        : 'https://via.placeholder.com/200x300?text=Sem+Capa';
+
+                    const authors = book.author_name ? book.author_name.join(', ') : 'Desconhecido';
+                    const year = book.first_publish_year || 'Ano desconhecido';
+
+                    bookElement.innerHTML = `
+                        <img src="${coverUrl}" alt="${book.title}" onerror="this.src='https://via.placeholder.com/200x300?text=Sem+Imagem'">
+                        <h3>${book.title}</h3>
+                        <p><strong>Autores:</strong> ${authors}</p>
+                        <p><strong>Publicado:</strong> ${year}</p>
+                        <p>${book.first_sentence ? book.first_sentence[0] : 'Sem descrição disponível.'}</p>
+                        <a href="https://openlibrary.org${book.key}" target="_blank">Ver no Open Library</a>
+                    `;
+                    resultsDiv.appendChild(bookElement);
                 });
+            } else {
+                resultsDiv.innerHTML = '<p>📭 Nenhum livro encontrado.</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao buscar livros:', error);
+            resultsDiv.innerHTML = `<p>❌ Erro ao buscar livros: ${error.message}. Tente novamente mais tarde.</p>`;
         });
-    }
+    });
+}
 
 // Filtro de busca
 const searchInput = document.getElementById('searchInput');
@@ -117,59 +144,168 @@ if (searchInput) {
         }
     }
 
-    // === Texto para Fala ===
-    const textInput = document.getElementById('text-input');
-    const speakButton = document.getElementById('speak-button');
-    const pauseButton = document.getElementById('pause-button');
-    const resumeButton = document.getElementById('resume-button');
-    const stopButton = document.getElementById('stop-button');
-    const rateInput = document.getElementById('rate');
-    const langSelect = document.getElementById('lang');
+// ============================================
+// TEXTO PARA VOZ (CORRIGIDO)
+// ============================================
+const speakBtn = document.getElementById('tts-speak');
+const stopBtn = document.getElementById('tts-stop');
+const downloadBtn = document.getElementById('tts-download');
+const textarea = document.getElementById('tts-text');
+const langSelect = document.getElementById('tts-lang');
+const rateRange = document.getElementById('tts-rate');
+const rateLabel = document.getElementById('rate-label');
+const statusDiv = document.getElementById('tts-status');
+
+// Se não existir o botão falar, não está na página TTS
+if (speakBtn) {
+    // Atualiza label da velocidade
+    if (rateRange && rateLabel) {
+        rateRange.addEventListener('input', function() {
+            rateLabel.textContent = parseFloat(this.value).toFixed(1) + 'x';
+        });
+    }
 
     let utterance = null;
-    let speaking = false;
+    let isSpeaking = false;
+    let audioBlob = null;
 
-    if (speakButton) {
-        speakButton.addEventListener('click', () => {
-            const text = textInput.value.trim();
-            if (!text) {
-                alert('Por favor, digite algum texto para falar.');
-                return;
+    // Função para gerar o áudio para download (usando Google TTS)
+    function gerarAudioParaDownload(texto, idioma) {
+        const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(texto)}&tl=${idioma}&client=tw-ob`;
+        if (statusDiv) statusDiv.textContent = '⏳ Gerando áudio para download...';
+
+        fetch(url, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
             }
+        })
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return response.blob();
+        })
+        .then(blob => {
+            audioBlob = blob;
+            if (downloadBtn) {
+                downloadBtn.style.display = 'inline-flex';
+                downloadBtn.textContent = '⬇ Baixar Áudio (MP3)';
+            }
+            if (statusDiv) statusDiv.textContent = '✅ Áudio gerado! Clique em "Baixar Áudio" para salvar.';
+        })
+        .catch(error => {
+            console.error('Erro ao gerar áudio:', error);
+            if (statusDiv) statusDiv.textContent = '⚠️ Não foi possível gerar o arquivo de áudio. A fala ainda funciona normalmente.';
+            if (downloadBtn) downloadBtn.style.display = 'none';
+        });
+    }
+
+    // Botão FALAR
+    speakBtn.addEventListener('click', function() {
+        const text = textarea ? textarea.value.trim() : '';
+        if (!text) {
+            if (statusDiv) statusDiv.textContent = '⚠️ Digite algum texto primeiro.';
+            return;
+        }
+
+        // Cancela qualquer fala anterior
+        if (window.speechSynthesis.speaking) {
             window.speechSynthesis.cancel();
-            utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = langSelect.value;
-            utterance.rate = parseFloat(rateInput.value);
-            utterance.onstart = () => { speaking = true; };
-            utterance.onend = () => { speaking = false; };
+        }
+
+        const lang = langSelect ? langSelect.value : 'en-US';
+        const rate = rateRange ? parseFloat(rateRange.value) : 1;
+
+        // Verifica se a API de fala está disponível
+        if (!window.speechSynthesis) {
+            if (statusDiv) statusDiv.textContent = '❌ Seu navegador não suporta síntese de voz.';
+            return;
+        }
+
+        // Cria a utterance
+        utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = lang;
+        utterance.rate = rate;
+
+        // Eventos
+        utterance.onstart = function() {
+            isSpeaking = true;
+            if (statusDiv) statusDiv.textContent = '🔊 Falando...';
+            speakBtn.disabled = true;
+            speakBtn.textContent = '⏳ Falando...';
+            if (downloadBtn) downloadBtn.style.display = 'none';
+        };
+
+        utterance.onend = function() {
+            isSpeaking = false;
+            if (statusDiv) statusDiv.textContent = '✅ Fala concluída! Gerando áudio...';
+            speakBtn.disabled = false;
+            speakBtn.textContent = '▶ Falar';
+            // Gera o áudio para download automaticamente
+            gerarAudioParaDownload(text, lang);
+        };
+
+        utterance.onerror = function(event) {
+            isSpeaking = false;
+            if (statusDiv) statusDiv.textContent = '❌ Erro na fala: ' + event.error;
+            speakBtn.disabled = false;
+            speakBtn.textContent = '▶ Falar';
+            console.error('Erro na fala:', event);
+            // Mesmo com erro, tenta gerar o áudio para download
+            gerarAudioParaDownload(text, lang);
+        };
+
+        // Tenta falar
+        try {
             window.speechSynthesis.speak(utterance);
-        });
-    }
 
-    if (pauseButton) {
-        pauseButton.addEventListener('click', () => {
-            if (speaking && window.speechSynthesis.speaking) {
-                window.speechSynthesis.pause();
-            }
-        });
-    }
+            // Fallback: se após 2 segundos não estiver falando, força a geração do áudio
+            setTimeout(() => {
+                if (!isSpeaking && !window.speechSynthesis.speaking) {
+                    if (statusDiv) statusDiv.textContent = '⚠️ A fala pode não estar disponível, mas você pode baixar o áudio.';
+                    speakBtn.disabled = false;
+                    speakBtn.textContent = '▶ Falar';
+                    gerarAudioParaDownload(text, lang);
+                }
+            }, 2000);
+        } catch (e) {
+            if (statusDiv) statusDiv.textContent = '❌ Erro ao iniciar fala: ' + e.message;
+            speakBtn.disabled = false;
+            speakBtn.textContent = '▶ Falar';
+            console.error(e);
+            gerarAudioParaDownload(text, lang);
+        }
+    });
 
-    if (resumeButton) {
-        resumeButton.addEventListener('click', () => {
-            if (speaking && window.speechSynthesis.paused) {
-                window.speechSynthesis.resume();
-            }
-        });
-    }
-
-    if (stopButton) {
-        stopButton.addEventListener('click', () => {
-            if (speaking) {
+    // Botão PARAR
+    if (stopBtn) {
+        stopBtn.addEventListener('click', function() {
+            if (window.speechSynthesis.speaking) {
                 window.speechSynthesis.cancel();
-                speaking = false;
+            }
+            isSpeaking = false;
+            if (statusDiv) statusDiv.textContent = '⏹ Parado.';
+            speakBtn.disabled = false;
+            speakBtn.textContent = '▶ Falar';
+            if (downloadBtn) downloadBtn.style.display = 'none';
+        });
+    }
+
+    // Botão BAIXAR ÁUDIO
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', function() {
+            if (audioBlob) {
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(audioBlob);
+                link.download = 'audio.mp3';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                setTimeout(() => URL.revokeObjectURL(link.href), 5000);
+            } else {
+                alert('Áudio ainda não disponível. Fale o texto primeiro ou clique em "Falar" para gerar.');
             }
         });
     }
+}
 
     // === Corretor Ortográfico ===
     const checkButton = document.getElementById('check-button');
@@ -511,40 +647,70 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Relógio Mundial
+// Relógio Mundial (corrigido)
 function updateClocks() {
     const now = new Date();
-    const utc = now.getTime() + now.getTimezoneOffset() * 60000;
 
+    // Obter o offset do navegador em minutos e converter para horas
+    const localOffsetMinutes = now.getTimezoneOffset();
+    const localOffsetHours = -localOffsetMinutes / 60;
+
+    // Lista de cidades com offset relativo ao UTC (em horas)
     const cities = [
-        { id: 'local', offset: 0, label: 'Local' },
-        { id: 'ny', offset: -4, label: 'Nova York' },
-        { id: 'london', offset: 1, label: 'Londres' },
-        { id: 'tokyo', offset: 9, label: 'Tóquio' },
-        { id: 'sydney', offset: 10, label: 'Sydney' },
-        { id: 'berlin', offset: 2, label: 'Berlim' }
+        { id: 'local', offset: localOffsetHours, label: '📍 Sua localização', icon: '📍', isLocal: true },
+        { id: 'ny', offset: -4, label: '🗽 Nova York', icon: '🗽' },
+        { id: 'london', offset: 1, label: '🇬🇧 Londres', icon: '🇬🇧' },
+        { id: 'berlin', offset: 2, label: '🇩🇪 Berlim', icon: '🇩🇪' },
+        { id: 'tokyo', offset: 9, label: '🇯🇵 Tóquio', icon: '🇯🇵' },
+        { id: 'sydney', offset: 10, label: '🇦🇺 Sydney', icon: '🇦🇺' },
+        { id: 'dubai', offset: 4, label: '🇦🇪 Dubai', icon: '🇦🇪' },
+        { id: 'moscow', offset: 3, label: '🇷🇺 Moscou', icon: '🇷🇺' }
     ];
 
+    const container = document.getElementById('clock-container');
+    if (!container) return;
+
+    // Se os cards ainda não foram criados, cria-os
+    if (container.children.length === 0) {
+        cities.forEach(city => {
+            const card = document.createElement('div');
+            card.className = `clock-card${city.isLocal ? ' local' : ''}`;
+            card.id = `card-${city.id}`;
+            card.innerHTML = `
+                <span class="city-icon">${city.icon}</span>
+                <h3>${city.label}</h3>
+                <div class="time" id="${city.id}-time">--:--:--</div>
+                <div class="date" id="${city.id}-date">--</div>
+                <div class="offset">UTC ${city.offset >= 0 ? '+' : ''}${city.offset}</div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    // Atualiza os horários
     cities.forEach(city => {
         const timeElement = document.getElementById(`${city.id}-time`);
         const dateElement = document.getElementById(`${city.id}-date`);
         if (!timeElement) return;
 
-        const localTime = new Date(utc + city.offset * 3600000);
-        const hours = String(localTime.getHours()).padStart(2, '0');
-        const minutes = String(localTime.getMinutes()).padStart(2, '0');
-        const seconds = String(localTime.getSeconds()).padStart(2, '0');
+        // Calcula a hora da cidade: UTC + offset
+        const utc = now.getTime() + now.getTimezoneOffset() * 60000; // milissegundos desde UTC
+        const cityTime = new Date(utc + city.offset * 3600000);
+
+        const hours = String(cityTime.getHours()).padStart(2, '0');
+        const minutes = String(cityTime.getMinutes()).padStart(2, '0');
+        const seconds = String(cityTime.getSeconds()).padStart(2, '0');
         timeElement.textContent = `${hours}:${minutes}:${seconds}`;
 
         if (dateElement) {
             const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
-            dateElement.textContent = localTime.toLocaleDateString('pt-BR', options);
+            dateElement.textContent = cityTime.toLocaleDateString('pt-BR', options);
         }
     });
 }
 
-// Atualiza a cada segundo
-if (document.getElementById('local-time')) {
+// Inicialização
+if (document.getElementById('clock-container')) {
     updateClocks();
     setInterval(updateClocks, 1000);
 }
@@ -563,15 +729,40 @@ function gerarCurriculo() {
     const formacao = document.getElementById('formacao').value.trim();
     const habilidades = document.getElementById('habilidades').value.trim();
 
+    // Verificar se há foto
+    const fotoInput = document.getElementById('foto');
+    if (fotoInput.files && fotoInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const fotoBase64 = e.target.result;
+            gerarHTMLCurriculo(nome, email, telefone, endereco, resumo, experiencia, formacao, habilidades, fotoBase64);
+        };
+        reader.readAsDataURL(fotoInput.files[0]);
+    } else {
+        gerarHTMLCurriculo(nome, email, telefone, endereco, resumo, experiencia, formacao, habilidades, '');
+    }
+}
+
+function gerarHTMLCurriculo(nome, email, telefone, endereco, resumo, experiencia, formacao, habilidades, fotoBase64) {
+    // Monta a foto (se houver)
+    const fotoHTML = fotoBase64 ? `
+        <img src="${fotoBase64}" alt="Foto" style="width:120px; height:120px; border-radius:50%; object-fit:cover; float:right; margin-left:20px; border:3px solid #ff5722;">
+    ` : '';
+
     const html = `
-        <div style="background:#fff; color:#000; padding:30px; border-radius:10px; text-align:left; max-width:700px; margin:0 auto; font-family:Arial, sans-serif;">
-            <h1 style="font-size:28px; margin-bottom:4px;">${nome}</h1>
-            <p style="margin:4px 0;">${email} ${telefone ? '| ' + telefone : ''}</p>
-            <p style="margin:4px 0;">${endereco}</p>
-            ${resumo ? `<hr><h3>Resumo</h3><p>${resumo}</p>` : ''}
-            ${experiencia ? `<hr><h3>Experiência</h3><p>${experiencia.replace(/\n/g, '<br>')}</p>` : ''}
-            ${formacao ? `<hr><h3>Formação</h3><p>${formacao.replace(/\n/g, '<br>')}</p>` : ''}
-            ${habilidades ? `<hr><h3>Habilidades</h3><p>${habilidades.split(',').map(h => h.trim()).join(' • ')}</p>` : ''}
+        <div style="background:#fff; color:#000; padding:30px; border-radius:10px; text-align:left; max-width:700px; margin:0 auto; font-family:Arial, sans-serif; position:relative; overflow:hidden; box-shadow:0 4px 15px rgba(0,0,0,0.1);">
+            <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:20px;">
+                <div style="flex:1;">
+                    <h1 style="font-size:28px; margin-bottom:4px; color:#ff5722;">${nome}</h1>
+                    <p style="margin:4px 0; color:#555;">${email} ${telefone ? '| ' + telefone : ''}</p>
+                    <p style="margin:4px 0; color:#555;">${endereco}</p>
+                </div>
+                ${fotoHTML}
+            </div>
+            ${resumo ? `<hr style="margin:20px 0; border:1px solid #eee;"><h3 style="color:#ff5722;">Resumo</h3><p style="color:#333;">${resumo}</p>` : ''}
+            ${experiencia ? `<hr style="margin:20px 0; border:1px solid #eee;"><h3 style="color:#ff5722;">Experiência</h3><p style="color:#333;">${experiencia.replace(/\n/g, '<br>')}</p>` : ''}
+            ${formacao ? `<hr style="margin:20px 0; border:1px solid #eee;"><h3 style="color:#ff5722;">Formação</h3><p style="color:#333;">${formacao.replace(/\n/g, '<br>')}</p>` : ''}
+            ${habilidades ? `<hr style="margin:20px 0; border:1px solid #eee;"><h3 style="color:#ff5722;">Habilidades</h3><p style="color:#333;">${habilidades.split(',').map(h => h.trim()).join(' • ')}</p>` : ''}
         </div>
     `;
 
@@ -582,11 +773,21 @@ function gerarCurriculo() {
 
 function imprimirCurriculo() {
     const content = document.getElementById('resume-content').innerHTML;
+    const nome = document.getElementById('nome').value.trim() || 'curriculo';
+    // Remove espaços e caracteres especiais para o nome do arquivo
+    const nomeArquivo = `curriculo_${nome.replace(/[^a-zA-Z0-9]/g, '_')}`;
+
     const win = window.open('', '_blank');
     win.document.write(`
         <html>
-            <head><title>Currículo</title>
-            <style>body { margin: 0; padding: 20px; }</style>
+            <head>
+                <title>${nomeArquivo}</title>
+                <style>
+                    body { margin: 0; padding: 20px; background: #f5f5f5; }
+                    @media print {
+                        body { background: #fff; padding: 0; }
+                    }
+                </style>
             </head>
             <body>${content}</body>
         </html>
@@ -601,3 +802,51 @@ function voltarFormulario() {
     // Opcional: limpa os campos se quiser
     // document.getElementById('resume-form').reset();
 }
+
+// ============================================
+// CONVERSOR DE MOEDAS
+// ============================================
+async function converterMoeda() {
+    const amount = parseFloat(document.getElementById('amount').value);
+    const fromCurrency = document.getElementById('from-currency').value;
+    const toCurrency = document.getElementById('to-currency').value;
+    const resultSpan = document.getElementById('converted-amount');
+    const rateInfo = document.getElementById('rate-info');
+
+    if (isNaN(amount) || amount <= 0) {
+        alert('Por favor, insira um valor válido maior que zero.');
+        return;
+    }
+
+    try {
+        // Usa a API gratuita (ExchangeRate-API)
+        const response = await fetch(`https://api.exchangerate-api.com/v4/latest/${fromCurrency}`);
+        if (!response.ok) throw new Error('Falha ao buscar taxas');
+        const data = await response.json();
+
+        const rate = data.rates[toCurrency];
+        if (!rate) {
+            alert('Moeda de destino não encontrada.');
+            return;
+        }
+
+        const converted = amount * rate;
+        resultSpan.textContent = `${converted.toFixed(2)} ${toCurrency}`;
+        rateInfo.textContent = `1 ${fromCurrency} = ${rate.toFixed(4)} ${toCurrency}`;
+    } catch (error) {
+        console.error('Erro na conversão:', error);
+        alert('Erro ao obter taxas de câmbio. Tente novamente mais tarde.');
+        resultSpan.textContent = '--';
+        rateInfo.textContent = '';
+    }
+}
+
+// Adiciona evento ao botão de conversão (se existir)
+document.addEventListener('DOMContentLoaded', () => {
+    const convertBtn = document.getElementById('convert-btn');
+    if (convertBtn) {
+        convertBtn.addEventListener('click', converterMoeda);
+        // Conversão automática ao carregar a página
+        converterMoeda();
+    }
+});

@@ -7,94 +7,116 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Utillitys">
+    <link rel="apple-touch-icon" href="images/icon-192.png">
 </head>
 <body>
-    <main>
-        <h1>Utillitys</h1>
+    <header>
+        <div style="display:flex; align-items:center; gap:20px;">
+            <h1>Utillitys</h1>
+            <a href="about.html" class="btn-sobre">ℹ️ Sobre</a>
+        </div>
         <div class="view-toggle">
-        <button id="btn-compact" class="active">📦 Compactado</button>
-        <button id="btn-expand">📖 Expandido</button>
+            <button id="btn-compact" class="active">📦 Compactado</button>
+            <button id="btn-expand">📖 Expandido</button>
         </div>
+    </header>
+
+    <main>
         <div class="search-container">
-        <input type="text" id="searchInput" placeholder="🔍 Buscar ferramenta..." />
+            <input type="text" id="searchInput" placeholder="🔍 Buscar ferramenta..." />
         </div>
+
         <section id="utilidades">
             <div class="utilidade-grid">
+                <!-- Calculadora -->
                 <div class="utilidade-card" onclick="window.location.href='calculator.html'">
                     <img src="images/calculators.png" alt="Calculadora">
                     <h3>Calculadora</h3>
                     <p>Calculadoras e calculadoras de conversão para finanças, construção, fitness, culinária e muito mais.</p>
                 </div>
+                <!-- Gerador de Senhas -->
                 <div class="utilidade-card" onclick="window.location.href='password-generator.html'">
                     <img src="images/password.png" alt="Gerador de Senhas">
                     <h3>Gerador de Senhas</h3>
                     <p>Gere senhas seguras de forma rápida e fácil.</p>
                 </div>
+                <!-- Verificador de Ortografia -->
                 <div class="utilidade-card" onclick="window.location.href='ortografia.html'">
                     <img src="images/ortografia.png" alt="Verificador de Ortografia">
                     <h3>Verificador de Ortografia</h3>
                     <p>Ferramenta simples para corrigir textos digitados no site.</p>
                 </div>
+                <!-- Gerador de QR Code -->
                 <div class="utilidade-card" onclick="window.location.href='qr-generator.html'">
                     <img src="images/qrcode.png" alt="Gerador de QR Code">
                     <h3>Gerador de QR Code</h3>
                     <p>Gere códigos QR para links ou texto rapidamente.</p>
                 </div>
+                <!-- Calculador de Idade -->
                 <div class="utilidade-card" onclick="window.location.href='age-calculator.html'">
                     <img src="images/age-calculator.png" alt="Calculador de Idade">
                     <h3>Calculador de Idade</h3>
                     <p>Calcule sua idade em anos, minutos e segundos.</p>
                 </div>
+                <!-- Busca de Livros -->
                 <div class="utilidade-card" onclick="window.location.href='book-search.html'">
                     <img src="images/book-search.png" alt="Busca de Livros">
                     <h3>Busca de Livros</h3>
                     <p>Encontre informações sobre seus livros favoritos.</p>
                 </div>
+                <!-- Conversor de Texto para Voz -->
                 <div class="utilidade-card" onclick="window.location.href='text-to-speech.html'">
                     <img src="images/text-to-speech.png" alt="Conversor de Texto para Voz">
                     <h3>Conversor de Texto para Voz</h3>
                     <p>Uma ferramenta que lê textos em voz alta para ajudar em acessibilidade ou multitarefas.</p>
                 </div>
+                <!-- Compactador de URL -->
                 <div class="utilidade-card" onclick="window.location.href='url-shortener.html'">
                     <img src="images/url-shortener.png" alt="Compactador de URL">
                     <h3>Compactador de URL</h3>
                     <p>Uma ferramenta para encurtar URLs longas e facilitar o compartilhamento.</p>
                 </div>
+                <!-- Calculadora IMC -->
                 <div class="utilidade-card" onclick="window.location.href='imc-calculator.html'">
                     <img src="images/imc.png" alt="Calculadora IMC">
                     <h3>Calculadora IMC</h3>
                     <p>Calcule seu Índice de Massa Corporal e veja sua classificação.</p>
-                 </div>
+                </div>
+                <!-- Relógio Mundial -->
                 <div class="utilidade-card" onclick="window.location.href='world-clock.html'">
-                    <img src="images/clock.png" alt="Relógio Mundial">
+                    <img src="images/worldclock.png" alt="Relógio Mundial">
                     <h3>Relógio Mundial</h3>
                     <p>Veja a hora em vários fusos horários.</p>
                 </div>
+                <!-- Gerador de Currículo -->
                 <div class="utilidade-card" onclick="window.location.href='resume-generator.html'">
                     <img src="images/resume.png" alt="Gerador de Currículo">
                     <h3>Gerador de Currículo</h3>
                     <p>Crie um currículo simples e profissional.</p>
                 </div>
-                <div class="utilidade-card" onclick="window.location.href='about.html'">
-                    <img src="images/about.png" alt="Sobre">
-                    <h3>Sobre</h3>
-                    <p>Conheça mais sobre o projeto.</p>
+                <div class="utilidade-card" onclick="window.location.href='currency-converter.html'">
+                    <img src="images/currency.png" alt="Conversor de Moedas">
+                    <h3>Conversor de Moedas</h3>
+                    <p>Converta valores entre diversas moedas com taxa atualizada.</p>
                 </div>
             </div>
         </section>
     </main>
 
     <footer>
-        <p>&copy; 2026 Utillitys. Desenvolvido com ❤️ por <a href="https://github.com/akiradv" target="_blank">AkiraDev</a> </p>
+        <p>&copy; 2026 Utillitys. Desenvolvido com ❤️ por <a href="https://github.com/akiradv" target="_blank">AkiraDev</a></p>
     </footer>
 
-<script>
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js')
-        .then(() => console.log('Service Worker registrado!'))
-        .catch(err => console.log('Erro ao registrar SW:', err));
-}
-</script>
+    <script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+            .then(() => console.log('Service Worker registrado!'))
+            .catch(err => console.log('Erro ao registrar SW:', err));
+    }
+    </script>
 
     <script src="script.js"></script>
     <div id="notificationsContainer"></div>

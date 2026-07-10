@@ -1,5 +1,5 @@
 /* ============================================
-   VARIÁVEIS (temas e cores)
+   VARIÁVEIS
    ============================================ */
 :root {
     --primary: #ff5722;
@@ -11,7 +11,6 @@
     --bg-card-hover: #2a2a2a;
     --text-light: #fff;
     --text-muted: #bbb;
-    --text-dark: #333;
     --shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
     --radius: 10px;
     --transition: 0.3s ease;
@@ -27,6 +26,11 @@
     padding: 0;
 }
 
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+}
+
 body {
     font-family: var(--font);
     background-color: var(--bg-body);
@@ -34,9 +38,11 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    text-align: center;
 }
 
+/* ============================================
+   MAIN - mais fluido
+   ============================================ */
 main {
     padding: 20px;
     flex: 1;
@@ -44,7 +50,7 @@ main {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
 }
 
@@ -58,7 +64,6 @@ a {
     text-decoration: none;
     transition: color var(--transition);
 }
-
 a:hover {
     color: var(--primary-dark);
     text-decoration: underline;
@@ -71,16 +76,17 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 40px;
+    padding: 15px 30px;
     background: var(--bg-card);
     border-bottom: 2px solid var(--primary);
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 10px;
+    width: 100%;
 }
 
 header h1 {
-    margin: 0;
     font-size: 28px;
+    margin: 0;
 }
 
 /* ============================================
@@ -88,24 +94,21 @@ header h1 {
    ============================================ */
 footer {
     text-align: center;
-    padding: 15px 0;
+    padding: 15px 20px;
     background-color: var(--bg-card);
     border-top: 2px solid var(--primary);
     color: var(--primary-light);
     margin-top: auto;
     width: 100%;
-}
-
-footer a {
-    color: var(--primary-light);
+    font-size: 14px;
 }
 
 /* ============================================
-   BOTÕES GERAIS
+   BOTÕES
    ============================================ */
 button, .btn {
     padding: 12px 24px;
-    font-size: 18px;
+    font-size: 16px;
     border: none;
     border-radius: var(--radius);
     background-color: var(--primary);
@@ -117,6 +120,8 @@ button, .btn {
     align-items: center;
     justify-content: center;
     gap: 8px;
+    min-height: 48px;
+    touch-action: manipulation;
 }
 
 button:hover, .btn:hover {
@@ -124,10 +129,7 @@ button:hover, .btn:hover {
     transform: scale(1.02);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7);
 }
-
-button:active, .btn:active {
-    transform: scale(0.98);
-}
+button:active { transform: scale(0.98); }
 
 .voltar {
     margin-top: 20px;
@@ -136,23 +138,27 @@ button:active, .btn:active {
 }
 
 /* ============================================
-   INPUTS E TEXTAREA
+   INPUTS
    ============================================ */
 input[type="text"],
 input[type="number"],
 input[type="date"],
 input[type="url"],
+input[type="email"],
+input[type="tel"],
 textarea {
     width: 100%;
     max-width: 400px;
     padding: 14px 18px;
-    font-size: 18px;
+    font-size: 16px;
     border: 2px solid var(--primary);
     border-radius: var(--radius);
     background-color: var(--bg-input);
     color: var(--text-light);
     transition: border-color var(--transition), box-shadow var(--transition);
     margin-bottom: 16px;
+    -webkit-appearance: none;
+    appearance: none;
 }
 
 input:focus,
@@ -170,7 +176,7 @@ textarea {
 }
 
 /* ============================================
-   CALCULADORA (calculadora simples)
+   CALCULADORA
    ============================================ */
 .calculator {
     margin: 20px auto;
@@ -179,6 +185,7 @@ textarea {
     padding: 20px;
     border-radius: var(--radius);
     box-shadow: var(--shadow);
+    width: 100%;
 }
 
 #calcInput {
@@ -198,7 +205,6 @@ textarea {
     grid-template-columns: repeat(4, 1fr);
     gap: 10px;
 }
-
 .calc-buttons button {
     padding: 16px;
     font-size: 20px;
@@ -206,7 +212,7 @@ textarea {
 }
 
 /* ============================================
-   CALCULADORA IMC (container específico)
+   CALCULADORA IMC
    ============================================ */
 .calculator-container {
     background: var(--bg-card);
@@ -222,14 +228,12 @@ textarea {
     margin-bottom: 18px;
     text-align: left;
 }
-
 .calculator-container .input-group label {
     display: block;
     margin-bottom: 6px;
     font-weight: bold;
     color: var(--text-light);
 }
-
 .calculator-container input {
     width: 100%;
     padding: 12px;
@@ -239,14 +243,12 @@ textarea {
     color: var(--text-light);
     font-size: 18px;
 }
-
 .calculator-container button {
     width: 100%;
     padding: 12px;
     font-weight: bold;
     font-size: 18px;
 }
-
 .calculator-container .resultado {
     margin-top: 20px;
     padding: 15px;
@@ -255,6 +257,7 @@ textarea {
     font-size: 1.1em;
     color: var(--text-light);
     border-left: 4px solid var(--primary);
+    word-break: break-word;
 }
 
 /* ============================================
@@ -267,6 +270,7 @@ textarea {
     padding: 25px;
     border-radius: var(--radius);
     box-shadow: var(--shadow);
+    width: 100%;
 }
 
 .password-display {
@@ -274,8 +278,8 @@ textarea {
     align-items: center;
     gap: 10px;
     margin-bottom: 15px;
+    flex-wrap: wrap;
 }
-
 #password {
     flex: 1;
     background: var(--bg-input);
@@ -285,16 +289,11 @@ textarea {
     padding: 12px;
     font-size: 20px;
     text-align: center;
-    cursor: pointer;
-    transition: background var(--transition);
-}
-
-#password:hover {
-    background: #333;
+    min-width: 120px;
 }
 
 /* ============================================
-   NOTIFICAÇÕES (toasts)
+   NOTIFICAÇÕES
    ============================================ */
 #notificationsContainer {
     position: fixed;
@@ -305,6 +304,7 @@ textarea {
     align-items: flex-end;
     gap: 10px;
     z-index: 999;
+    pointer-events: none;
 }
 
 .notification {
@@ -318,25 +318,19 @@ textarea {
     position: relative;
     animation: slideIn 0.4s ease;
     transition: transform 0.3s, opacity 0.3s;
+    pointer-events: auto;
 }
 
-.notification.success {
-    background: #2ecc71;
-    color: #000;
-}
-.notification.error {
-    background: #e74c3c;
-}
-.notification.info {
-    background: #3498db;
-}
+.notification.success { background: #2ecc71; color: #000; }
+.notification.error { background: #e74c3c; }
+.notification.info { background: #3498db; }
 
 .notification .progress-bar {
     position: absolute;
     bottom: 0;
     left: 0;
     height: 4px;
-    background: rgba(255, 255, 255, 0.7);
+    background: rgba(255,255,255,0.7);
     width: 100%;
     animation: progress 3s linear forwards;
     border-radius: 0 0 8px 8px;
@@ -346,7 +340,6 @@ textarea {
     from { transform: translateX(100%); opacity: 0; }
     to { transform: translateX(0); opacity: 1; }
 }
-
 @keyframes progress {
     from { width: 100%; }
     to { width: 0; }
@@ -355,11 +348,6 @@ textarea {
 /* ============================================
    QR CODE
    ============================================ */
-#qr-code {
-    margin-top: 20px;
-    text-align: center;
-}
-
 #qr-code img {
     max-width: 250px;
     border-radius: 8px;
@@ -367,26 +355,35 @@ textarea {
 }
 
 /* ============================================
-   GRID DE UTILIDADES (página inicial)
+   GRID DE UTILIDADES - Estratégia do North Studios
    ============================================ */
 .utilidade-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 25px;
+    gap: 20px;
     width: 100%;
-    max-width: 1200px;
     margin: 20px 0;
+}
+
+/* Mobile: 2 colunas */
+.utilidade-grid {
+    grid-template-columns: repeat(2, 1fr);
 }
 
 .utilidade-card {
     background: var(--bg-card);
     border-radius: var(--radius);
-    padding: 25px 15px;
+    padding: 18px 12px;
     text-align: center;
     transition: transform 0.25s, box-shadow 0.25s;
     cursor: pointer;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     border: 1px solid transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 150px;
+    word-break: break-word;
 }
 
 .utilidade-card:hover {
@@ -396,31 +393,35 @@ textarea {
 }
 
 .utilidade-card img {
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
     object-fit: contain;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
+    max-width: 100%;
     filter: drop-shadow(0 2px 8px rgba(255, 87, 34, 0.3));
 }
 
 .utilidade-card h3 {
-    font-size: 20px;
+    font-size: 16px;
     color: var(--primary);
-    margin: 8px 0 6px;
+    margin: 6px 0 4px;
+    line-height: 1.2;
 }
 
 .utilidade-card p {
-    font-size: 14px;
+    font-size: 12px;
     color: var(--text-muted);
     margin: 0;
-    line-height: 1.4;
+    line-height: 1.3;
 }
 
-/* ---- TOGGLE (Compactado / Expandido) ---- */
+/* ---- TOGGLE ---- */
 .view-toggle {
     display: flex;
     gap: 10px;
     align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .view-toggle button {
@@ -430,9 +431,10 @@ textarea {
     color: var(--primary);
     border-radius: 30px;
     font-weight: bold;
-    font-size: 15px;
+    font-size: 14px;
     box-shadow: none;
     margin: 0;
+    min-height: 40px;
 }
 
 .view-toggle button.active {
@@ -440,29 +442,23 @@ textarea {
     color: #fff;
     box-shadow: 0 0 15px rgba(255, 87, 34, 0.4);
 }
-
-.view-toggle button:hover {
-    transform: scale(1.05);
-}
+.view-toggle button:hover { transform: scale(1.05); }
 
 /* Modo Compactado */
 .utilidade-grid.compact .utilidade-card {
     padding: 12px 8px;
-    min-width: 100px;
+    min-height: 110px;
 }
-
 .utilidade-grid.compact .utilidade-card img {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
 }
-
 .utilidade-grid.compact .utilidade-card p {
     display: none;
 }
-
 .utilidade-grid.compact .utilidade-card h3 {
-    font-size: 15px;
-    margin: 6px 0 0;
+    font-size: 14px;
+    margin: 4px 0 0;
 }
 
 /* ============================================
@@ -470,11 +466,13 @@ textarea {
    ============================================ */
 #results {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 25px;
+    gap: 20px;
     width: 100%;
     max-width: 1000px;
     margin: 20px auto;
+}
+#results {
+    grid-template-columns: 1fr;
 }
 
 .book-item {
@@ -506,13 +504,11 @@ textarea {
     font-size: 18px;
     margin-bottom: 6px;
 }
-
 .book-item p {
     font-size: 14px;
     color: var(--text-muted);
     margin: 6px 0;
 }
-
 .book-item a {
     display: inline-block;
     margin-top: 10px;
@@ -521,7 +517,7 @@ textarea {
 }
 
 /* ============================================
-   ENCURTADOR DE URL
+   ENCURTADOR
    ============================================ */
 #shortened-url {
     margin-top: 20px;
@@ -538,7 +534,6 @@ textarea {
     color: var(--primary);
     margin-right: 12px;
 }
-
 #shortened-url button {
     padding: 6px 16px;
     font-size: 14px;
@@ -546,7 +541,7 @@ textarea {
 }
 
 /* ============================================
-   CORRETOR ORTOGRÁFICO
+   CORRETOR
    ============================================ */
 #result {
     margin-top: 20px;
@@ -558,15 +553,15 @@ textarea {
     padding: 15px 20px;
     border-radius: var(--radius);
     width: 100%;
+    word-break: break-word;
 }
 
 /* ============================================
-   IDADE / DATAS
+   IDADE
    ============================================ */
 #age-result,
 #date-comparison-result,
-#future-age-result,
-#next-birthday-result {
+#future-age-result {
     margin-top: 20px;
     text-align: left;
     max-width: 400px;
@@ -576,17 +571,11 @@ textarea {
     border-radius: var(--radius);
     color: var(--text-light);
     box-shadow: var(--shadow);
-}
-
-#age-result h2,
-#date-comparison-result h2,
-#future-age-result h2 {
-    font-size: 20px;
-    margin-bottom: 10px;
+    word-break: break-word;
 }
 
 /* ============================================
-   SOBRE / ABOUT
+   ABOUT
    ============================================ */
 .about-container {
     max-width: 600px;
@@ -598,14 +587,51 @@ textarea {
     color: var(--text-light);
     line-height: 1.8;
     margin: 20px auto;
+    width: 100%;
 }
 
-.about-container a {
-    color: var(--primary);
+.about-tools-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+    margin: 20px 0 25px;
 }
+.about-tools-list {
+    grid-template-columns: 1fr;
+}
+
+.about-tools-list li {
+    background: var(--bg-input);
+    padding: 10px 16px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-left: 3px solid var(--primary);
+}
+
+.about-tools-list li a {
+    color: var(--text-light);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    transition: color 0.3s;
+}
+.about-tools-list li a:hover { color: var(--primary); }
+.about-tools-list li a i {
+    color: var(--primary);
+    width: 24px;
+    text-align: center;
+    font-size: 18px;
+    transition: transform 0.3s;
+}
+.about-tools-list li a:hover i { transform: scale(1.2); }
 
 /* ============================================
-   GERADOR DE CURRÍCULO
+   CURRÍCULO
    ============================================ */
 .resume-form {
     max-width: 600px;
@@ -620,14 +646,12 @@ textarea {
 .form-group {
     margin-bottom: 18px;
 }
-
 .form-group label {
     display: block;
     margin-bottom: 6px;
     font-weight: bold;
     color: var(--text-light);
 }
-
 .form-group input,
 .form-group textarea {
     width: 100%;
@@ -638,7 +662,6 @@ textarea {
     color: var(--text-light);
     font-size: 16px;
 }
-
 .resume-preview {
     width: 100%;
     max-width: 800px;
@@ -646,29 +669,152 @@ textarea {
 }
 
 /* ============================================
-   BARRA DE PESQUISA (índice)
+   BARRA DE PESQUISA
    ============================================ */
 .search-container {
     width: 100%;
-    max-width: 500px;
-    margin: 20px auto;
+    max-width: 100%;
+    margin: 15px auto; /* centraliza horizontalmente */
+    padding: 0 10px;
+    display: flex;
+    justify-content: center; /* centraliza o input */
 }
 
 #searchInput {
     width: 100%;
+    max-width: 600px; /* valor base para mobile */
     padding: 14px 20px;
-    font-size: 18px;
+    font-size: 16px;
     border: 2px solid var(--primary);
     border-radius: 50px;
     background: var(--bg-input);
     color: var(--text-light);
     transition: box-shadow var(--transition);
+    box-sizing: border-box;
 }
 
 #searchInput:focus {
     outline: none;
     box-shadow: 0 0 0 4px rgba(255, 87, 34, 0.3);
-    animation: pulseGlow 1.5s infinite alternate;
+}
+
+/* ============================================
+   RELÓGIO MUNDIAL
+   ============================================ */
+.clock-container {
+    display: grid;
+    gap: 20px;
+    width: 100%;
+    max-width: 900px;
+    margin: 20px auto;
+}
+.clock-container {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.clock-card {
+    background: var(--bg-card);
+    padding: 20px 12px 16px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    text-align: center;
+    color: var(--text-light);
+    border-left: 5px solid var(--primary);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.clock-card .city-icon {
+    font-size: 32px;
+    display: block;
+    margin-bottom: 4px;
+}
+.clock-card h3 {
+    font-size: 17px;
+    margin: 0 0 6px;
+    color: var(--primary);
+}
+.clock-card .time {
+    font-size: 28px;
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
+    background: var(--bg-body);
+    padding: 4px 10px;
+    border-radius: 8px;
+    display: inline-block;
+    margin: 4px 0;
+    color: var(--text-light);
+}
+.clock-card .date {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+.clock-card .offset {
+    font-size: 12px;
+    color: var(--text-muted);
+    background: var(--bg-input);
+    padding: 2px 12px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-top: 4px;
+}
+.clock-card.local {
+    border-left-color: #2ecc71;
+    background: linear-gradient(145deg, var(--bg-card), #1a2a1a);
+}
+.clock-card.local .time {
+    color: #2ecc71;
+    text-shadow: 0 0 15px rgba(46,204,113,0.3);
+}
+.clock-card.local h3 { color: #2ecc71; }
+
+/* ============================================
+   BOTÃO SOBRE
+   ============================================ */
+.btn-sobre {
+    display: inline-block;
+    padding: 8px 18px;
+    background: transparent;
+    color: var(--primary-light);
+    border: 2px solid var(--primary);
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.btn-sobre:hover {
+    background: var(--primary);
+    color: #fff;
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 87, 34, 0.4);
+}
+.btn-sobre:active { transform: scale(0.95); }
+
+/* ============================================
+   INPUT FILE
+   ============================================ */
+.form-group input[type="file"] {
+    padding: 10px;
+    background: var(--bg-input);
+    color: var(--text-light);
+    border: 2px solid var(--primary);
+    border-radius: 6px;
+    width: 100%;
+    cursor: pointer;
+}
+.form-group input[type="file"]::-webkit-file-upload-button {
+    background: var(--primary);
+    border: none;
+    color: #fff;
+    padding: 6px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
 }
 
 /* ============================================
@@ -679,7 +825,6 @@ textarea {
     transform: translateY(30px);
     animation: fadeUp 0.6s ease forwards;
 }
-
 .utilidade-card:nth-child(1) { animation-delay: 0.05s; }
 .utilidade-card:nth-child(2) { animation-delay: 0.10s; }
 .utilidade-card:nth-child(3) { animation-delay: 0.15s; }
@@ -690,40 +835,39 @@ textarea {
 .utilidade-card:nth-child(8) { animation-delay: 0.40s; }
 .utilidade-card:nth-child(9) { animation-delay: 0.45s; }
 .utilidade-card:nth-child(10) { animation-delay: 0.50s; }
+.utilidade-card:nth-child(11) { animation-delay: 0.55s; }
+.utilidade-card:nth-child(12) { animation-delay: 0.60s; }
+.utilidade-card:nth-child(13) { animation-delay: 0.65s; }
+.utilidade-card:nth-child(14) { animation-delay: 0.70s; }
 
 @keyframes fadeUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes pulseGlow {
-    0% { box-shadow: 0 0 0 0 rgba(255,87,34,0.4); }
-    100% { box-shadow: 0 0 0 8px rgba(255,87,34,0); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* ============================================
-   RESPONSIVIDADE (Apenas ajustes mobile)
+   RESPONSIVIDADE - Estratégia do North Studios
    ============================================ */
 
-/* Tablets */
-@media (max-width: 768px) {
+/* Tablet (768px) */
+@media (min-width: 768px) {
+    main {
+        padding: 30px 40px;
+    }
+
     header {
-        flex-direction: column;
-        align-items: center;
-        padding: 15px 20px;
+        padding: 20px 40px;
     }
     header h1 {
-        font-size: 24px;
+        font-size: 28px;
     }
-    .view-toggle {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
+
     .utilidade-grid {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 18px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+    }
+    .utilidade-card {
+        padding: 25px 15px;
+        min-height: 180px;
     }
     .utilidade-card img {
         width: 70px;
@@ -732,27 +876,244 @@ textarea {
     .utilidade-card h3 {
         font-size: 18px;
     }
+    .utilidade-card p {
+        font-size: 13px;
+    }
+
     .utilidade-grid.compact .utilidade-card {
-        min-width: 80px;
+        padding: 14px 10px;
+        min-height: 120px;
     }
     .utilidade-grid.compact .utilidade-card img {
-        width: 40px;
-        height: 40px;
+        width: 45px;
+        height: 45px;
     }
     .utilidade-grid.compact .utilidade-card h3 {
-        font-size: 13px;
+        font-size: 15px;
+    }
+
+    .clock-container {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+    }
+    .clock-card .time {
+        font-size: 32px;
+    }
+
+    .about-tools-list {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    #results {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+    }
+
+    .calculator, .password-generator, .calculator-container {
+        max-width: 80%;
+    }
+
+    button, .btn {
+        width: auto;
+        min-width: 120px;
+    }
+
+    .voltar {
+        min-width: 100px;
+    }
+
+    .search-container {
+        max-width: 600px;
+        padding: 0;
+    }
+    #searchInput {
+        max-width: 700px;
+        font-size: 17px;
+        padding: 14px 22px;
+    }
+
+    .resume-form {
+        max-width: 80%;
+        padding: 35px 30px;
+    }
+    .about-container {
+        max-width: 80%;
+        padding: 35px 30px;
+    }
+    #shortened-url {
+        max-width: 80%;
     }
 }
 
-/* Celulares */
-@media (max-width: 480px) {
+/* Desktop (1024px) */
+@media (min-width: 1024px) {
     main {
-        padding: 15px 10px;
+        padding: 40px 50px;
     }
 
     header {
-        padding: 12px 15px;
+        padding: 25px 50px;
+    }
+    header h1 {
+        font-size: 32px;
+    }
+
+    .utilidade-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 30px;
+        margin: 30px 0;
+    }
+    .utilidade-card {
+        padding: 30px 20px;
+        min-height: 220px;
+        border-radius: 12px;
+    }
+    .utilidade-card img {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 12px;
+    }
+    .utilidade-card h3 {
+        font-size: 20px;
+    }
+    .utilidade-card p {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .utilidade-grid.compact .utilidade-card {
+        padding: 16px 12px;
+        min-height: 140px;
+    }
+    .utilidade-grid.compact .utilidade-card img {
+        width: 55px;
+        height: 55px;
+    }
+    .utilidade-grid.compact .utilidade-card h3 {
+        font-size: 17px;
+    }
+
+    .clock-container {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 25px;
+    }
+    .clock-card .time {
+        font-size: 34px;
+    }
+    .clock-card h3 {
+        font-size: 18px;
+    }
+
+    .about-tools-list {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 12px;
+    }
+
+    #results {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+    }
+
+    .calculator, .password-generator, .calculator-container {
+        max-width: 60%;
+    }
+
+    button, .btn {
+        min-width: 150px;
+        padding: 14px 30px;
+        font-size: 17px;
+    }
+
+    .voltar {
+        min-width: 120px;
+        padding: 10px 30px;
+        font-size: 16px;
+    }
+
+    .search-container {
+        max-width: 800px;
+    }
+    #searchInput {
+        max-width: 800px;
+        font-size: 18px;
+        padding: 14px 24px;
+    }
+
+    .resume-form {
+        max-width: 60%;
+        padding: 40px 35px;
+    }
+    .about-container {
+        max-width: 60%;
+        padding: 40px 35px;
+    }
+    #shortened-url {
+        max-width: 60%;
+        padding: 20px;
+    }
+
+    .view-toggle button {
+        padding: 10px 22px;
+        font-size: 15px;
+    }
+
+    .btn-sobre {
+        font-size: 15px;
+        padding: 8px 22px;
+    }
+
+    footer {
+        padding: 20px 0;
+        font-size: 15px;
+    }
+}
+
+/* Telas grandes (1400px+) */
+@media (min-width: 1400px) {
+    .utilidade-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 35px;
+    }
+    .utilidade-card {
+        padding: 35px 25px;
+        min-height: 250px;
+    }
+    .utilidade-card img {
+        width: 100px;
+        height: 100px;
+    }
+    .utilidade-card h3 {
+        font-size: 22px;
+    }
+    .utilidade-card p {
+        font-size: 15px;
+    }
+
+    .clock-container {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 30px;
+    }
+    .search-container {
+        max-width: 1000px;
+    }
+    #searchInput {
+        max-width: 1000px;
+        font-size: 20px;
+        padding: 18px 32px;
+    }
+}
+
+/* Mobile pequeno (até 480px) - mantém 2 colunas */
+@media (max-width: 480px) {
+    main {
+        padding: 12px 8px;
+    }
+
+    header {
+        padding: 10px 15px;
         flex-direction: column;
+        align-items: center;
         gap: 8px;
     }
     header h1 {
@@ -760,38 +1121,38 @@ textarea {
     }
 
     .view-toggle button {
-        padding: 8px 14px;
+        padding: 6px 14px;
         font-size: 13px;
+        min-height: 36px;
     }
 
     .utilidade-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 12px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
         margin: 10px 0;
     }
-
     .utilidade-card {
-        padding: 15px 8px;
+        padding: 12px 6px;
+        min-height: 120px;
+        border-radius: 8px;
     }
-
     .utilidade-card img {
-        width: 55px;
-        height: 55px;
-        margin-bottom: 6px;
+        width: 45px;
+        height: 45px;
+        margin-bottom: 4px;
     }
-
     .utilidade-card h3 {
-        font-size: 16px;
-        margin: 4px 0;
+        font-size: 14px;
+        margin: 4px 0 2px;
     }
-
     .utilidade-card p {
-        font-size: 12px;
+        font-size: 11px;
+        line-height: 1.2;
     }
 
     .utilidade-grid.compact .utilidade-card {
-        padding: 10px 5px;
-        min-width: 70px;
+        padding: 8px 4px;
+        min-height: 90px;
     }
     .utilidade-grid.compact .utilidade-card img {
         width: 35px;
@@ -805,13 +1166,67 @@ textarea {
         width: 100%;
         justify-content: center;
         padding: 14px 20px;
-        font-size: 16px;
-        min-height: 50px;
+        font-size: 15px;
+        min-height: 48px;
     }
 
     input, textarea {
-        font-size: 16px;
-        padding: 12px;
+        font-size: 15px;
+        padding: 12px 14px;
+    }
+
+    .clock-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    .clock-card {
+        padding: 14px 8px 12px;
+    }
+    .clock-card .time {
+        font-size: 22px;
+    }
+    .clock-card h3 {
+        font-size: 14px;
+    }
+    .clock-card .city-icon {
+        font-size: 24px;
+    }
+
+    .about-tools-list {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+    .about-tools-list li {
+        padding: 8px 12px;
+    }
+    .about-tools-list li a {
+        font-size: 13px;
+    }
+
+    .resume-form {
+        padding: 16px 12px;
+    }
+    .about-container {
+        padding: 16px 12px;
+    }
+
+    .search-container {
+        padding: 0 3px;
+        margin: 10px auto;
+    }
+    #searchInput {
+        font-size: 15px;
+        padding: 10px 14px;
+    }
+
+    .btn-sobre {
+        font-size: 13px;
+        padding: 4px 14px;
+    }
+
+    .voltar {
+        font-size: 14px;
+        padding: 8px 20px;
     }
 
     #results {
@@ -819,32 +1234,208 @@ textarea {
         gap: 15px;
     }
 
-    .calculator-container {
-        padding: 20px 15px;
+    .calculator, .password-generator, .calculator-container {
+        padding: 16px 12px;
     }
 
-    .resume-form {
-        padding: 20px 15px;
+    #notificationsContainer {
+        bottom: 10px;
+        right: 10px;
+        left: 10px;
     }
-
-    #resume-content > div {
-        padding: 15px !important;
+    .notification {
+        min-width: auto;
+        width: 100%;
+        padding: 12px 16px;
         font-size: 14px;
     }
-    #resume-content h1 {
-        font-size: 22px !important;
-    }
+}
 
-    .about-container {
-        padding: 20px 15px;
-        margin: 10px;
-    }
+/* ============================================
+   CONVERSOR DE MOEDAS
+   ============================================ */
+.converter-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 20px auto;
+}
 
-    .search-container {
-        padding: 0 5px;
-    }
-    #searchInput {
-        font-size: 16px;
-        padding: 12px 16px;
-    }
+.converter-box {
+    background: var(--bg-card);
+    padding: 30px 25px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    text-align: left;
+}
+
+.converter-box .input-group {
+    margin-bottom: 18px;
+}
+
+.converter-box .input-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+    color: var(--text-light);
+}
+
+.converter-box input,
+.converter-box select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--primary);
+    border-radius: 6px;
+    background: var(--bg-input);
+    color: var(--text-light);
+    font-size: 16px;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.converter-box select option {
+    background: var(--bg-input);
+    color: var(--text-light);
+}
+
+.converter-box button {
+    width: 100%;
+    margin-top: 6px;
+}
+
+.resultado-conversao {
+    margin-top: 20px;
+    padding: 15px;
+    background: var(--bg-body);
+    border-radius: 8px;
+    color: var(--text-light);
+    text-align: center;
+    border-left: 4px solid var(--primary);
+}
+
+.resultado-conversao #converted-amount {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: var(--primary);
+}
+
+.resultado-conversao #rate-info {
+    font-size: 0.9em;
+    color: var(--text-muted);
+    margin-top: 6px;
+}
+
+/* ============================================
+   TEXTO PARA VOZ
+   ============================================ */
+.tts-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
+}
+
+.tts-box {
+    background: var(--bg-card);
+    padding: 25px 20px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    text-align: left;
+}
+
+.tts-notice {
+    background: #3a2a1a;
+    border-left: 4px solid var(--primary);
+    padding: 10px 14px;
+    border-radius: 6px;
+    margin-bottom: 18px;
+    color: var(--text-light);
+    font-size: 14px;
+}
+
+.tts-box .input-group {
+    margin-bottom: 16px;
+}
+
+.tts-box .input-group label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: bold;
+    color: var(--text-light);
+    font-size: 14px;
+}
+
+.tts-box textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--primary);
+    border-radius: 6px;
+    background: var(--bg-input);
+    color: var(--text-light);
+    font-size: 16px;
+    resize: vertical;
+    min-height: 100px;
+    font-family: var(--font);
+}
+
+.tts-box select,
+.tts-box input[type="range"] {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid var(--primary);
+    border-radius: 6px;
+    background: var(--bg-input);
+    color: var(--text-light);
+    font-size: 16px;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.tts-box input[type="range"] {
+    padding: 0;
+    height: 6px;
+    border: none;
+    background: var(--primary);
+    border-radius: 3px;
+    outline: none;
+}
+
+.tts-box input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--primary);
+    cursor: pointer;
+}
+
+#rate-label {
+    color: var(--text-light);
+    font-size: 14px;
+    margin-left: 8px;
+}
+
+.tts-controls {
+    display: flex;
+    gap: 12px;
+    margin: 16px 0;
+}
+
+.tts-controls .btn {
+    flex: 1;
+    min-height: 48px;
+}
+
+.tts-status {
+    margin-top: 16px;
+    padding: 12px;
+    border-radius: 6px;
+    color: var(--text-light);
+    text-align: center;
+    background: var(--bg-body);
+    border-left: 4px solid var(--primary);
+    font-size: 14px;
+}
+
+#tts-download {
+    margin-top: 12px;
 }
