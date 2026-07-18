@@ -647,30 +647,34 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Relógio Mundial (corrigido)
+// Relógio Mundial (melhorado)
 function updateClocks() {
     const now = new Date();
-
-    // Obter o offset do navegador em minutos e converter para horas
     const localOffsetMinutes = now.getTimezoneOffset();
     const localOffsetHours = -localOffsetMinutes / 60;
 
-    // Lista de cidades com offset relativo ao UTC (em horas)
     const cities = [
-        { id: 'local', offset: localOffsetHours, label: '📍 Sua localização', icon: '📍', isLocal: true },
-        { id: 'ny', offset: -4, label: '🗽 Nova York', icon: '🗽' },
-        { id: 'london', offset: 1, label: '🇬🇧 Londres', icon: '🇬🇧' },
-        { id: 'berlin', offset: 2, label: '🇩🇪 Berlim', icon: '🇩🇪' },
-        { id: 'tokyo', offset: 9, label: '🇯🇵 Tóquio', icon: '🇯🇵' },
-        { id: 'sydney', offset: 10, label: '🇦🇺 Sydney', icon: '🇦🇺' },
-        { id: 'dubai', offset: 4, label: '🇦🇪 Dubai', icon: '🇦🇪' },
-        { id: 'moscow', offset: 3, label: '🇷🇺 Moscou', icon: '🇷🇺' }
+        { id: 'local', offset: localOffsetHours, label: 'Sua localização', icon: '📍', isLocal: true },
+        { id: 'ny', offset: -4, label: 'Nova York', icon: '🗽' },
+        { id: 'london', offset: 1, label: 'Londres', icon: '🇬🇧' },
+        { id: 'berlin', offset: 2, label: 'Berlim', icon: '🇩🇪' },
+        { id: 'paris', offset: 2, label: 'Paris', icon: '🇫🇷' },
+        { id: 'rome', offset: 2, label: 'Roma', icon: '🇮🇹' },
+        { id: 'moscow', offset: 3, label: 'Moscou', icon: '🇷🇺' },
+        { id: 'dubai', offset: 4, label: 'Dubai', icon: '🇦🇪' },
+        { id: 'tokyo', offset: 9, label: 'Tóquio', icon: '🇯🇵' },
+        { id: 'sydney', offset: 10, label: 'Sydney', icon: '🇦🇺' },
+        { id: 'shanghai', offset: 8, label: 'Xangai', icon: '🇨🇳' },
+        { id: 'singapore', offset: 8, label: 'Singapura', icon: '🇸🇬' },
+        { id: 'sao-paulo', offset: -3, label: 'São Paulo', icon: '🇧🇷' },
+        { id: 'buenos-aires', offset: -3, label: 'Buenos Aires', icon: '🇦🇷' },
+        { id: 'mexico-city', offset: -6, label: 'Cidade do México', icon: '🇲🇽' },
+        { id: 'los-angeles', offset: -7, label: 'Los Angeles', icon: '🇺🇸' }
     ];
 
     const container = document.getElementById('clock-container');
     if (!container) return;
 
-    // Se os cards ainda não foram criados, cria-os
     if (container.children.length === 0) {
         cities.forEach(city => {
             const card = document.createElement('div');
@@ -678,25 +682,25 @@ function updateClocks() {
             card.id = `card-${city.id}`;
             card.innerHTML = `
                 <span class="city-icon">${city.icon}</span>
-                <h3>${city.label}</h3>
+                <div class="city-name">${city.label}</div>
                 <div class="time" id="${city.id}-time">--:--:--</div>
                 <div class="date" id="${city.id}-date">--</div>
-                <div class="offset">UTC ${city.offset >= 0 ? '+' : ''}${city.offset}</div>
+                <div class="offset-info">UTC ${city.offset >= 0 ? '+' : ''}${city.offset}</div>
+                <div class="diff-hours" id="${city.id}-diff"></div>
             `;
             container.appendChild(card);
         });
     }
 
-    // Atualiza os horários
+    const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+
     cities.forEach(city => {
         const timeElement = document.getElementById(`${city.id}-time`);
         const dateElement = document.getElementById(`${city.id}-date`);
+        const diffElement = document.getElementById(`${city.id}-diff`);
         if (!timeElement) return;
 
-        // Calcula a hora da cidade: UTC + offset
-        const utc = now.getTime() + now.getTimezoneOffset() * 60000; // milissegundos desde UTC
         const cityTime = new Date(utc + city.offset * 3600000);
-
         const hours = String(cityTime.getHours()).padStart(2, '0');
         const minutes = String(cityTime.getMinutes()).padStart(2, '0');
         const seconds = String(cityTime.getSeconds()).padStart(2, '0');
@@ -705,6 +709,14 @@ function updateClocks() {
         if (dateElement) {
             const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
             dateElement.textContent = cityTime.toLocaleDateString('pt-BR', options);
+        }
+
+        if (diffElement && !city.isLocal) {
+            const diff = city.offset - localOffsetHours;
+            const diffText = diff > 0 ? `+${diff}h` : (diff < 0 ? `${diff}h` : 'mesmo fuso');
+            diffElement.textContent = `⏱️ ${diffText}`;
+        } else if (diffElement && city.isLocal) {
+            diffElement.textContent = '📍 Você está aqui';
         }
     });
 }

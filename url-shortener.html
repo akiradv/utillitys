@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compactador de URL - Utillitys</title>
+    <title>Encurtador de URL - Utillitys</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="manifest" href="/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -13,17 +13,29 @@
 </head>
 <body>
     <header>
-        <h1>Compactador de URL</h1>
-        <button class="btn voltar" onclick="window.location.href='index.html'">Voltar</button>
+        <h1>Encurtador de URL</h1>
+        <a href="index.html" class="btn-sobre" style="text-decoration:none;">← Voltar</a>
     </header>
+
     <main>
-        <input type="text" id="url-input" placeholder="Cole sua URL longa aqui...">
-        <button id="shorten-button" class="btn">Encurtar URL</button>
-        <p id="shortened-url"></p>
+        <div class="url-shortener-container">
+            <input type="text" id="url-input" placeholder="Cole sua URL longa aqui..." />
+            <button id="shorten-button" class="btn">Encurtar URL</button>
+            <div id="shortened-url"></div>
+
+            <!-- Aviso de permanência -->
+            <div class="permanent-notice">
+                ✅ O link encurtado pelo TinyURL é <strong>permanente</strong> e não expira automaticamente.
+            </div>
+        </div>
+
+        <button class="btn voltar" onclick="window.location.href='index.html'">Voltar</button>
     </main>
+
     <footer>
         <p>&copy; 2026 Utillitys. Desenvolvido com ❤️ por <a href="https://github.com/akiradv" target="_blank">AkiraDev</a></p>
     </footer>
+
     <script src="script.js"></script>
 </body>
-</html> 
+</html>

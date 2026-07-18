@@ -12,11 +12,20 @@
     <link rel="apple-touch-icon" href="images/icon-192.png">
 </head>
 <body>
-    <main>
+    <header>
         <h1>Gerador de QR Code</h1>
-        <input type="text" id="qr-input" placeholder="Digite algo aqui" />
-        <button id="generate-qr-code">Gerar QR Code</button>
-        <div id="qr-code"></div>
+        <a href="index.html" class="btn-sobre" style="text-decoration:none;">← Voltar</a>
+    </header>
+
+    <main>
+        <div class="qr-container">
+            <input type="text" id="qr-input" placeholder="Digite o texto ou URL aqui..." />
+            <button id="generate-qr-code" class="btn">Gerar QR Code</button>
+            <div id="qr-code"></div>
+            <div class="permanent-notice">
+                ✅ O QR Code gerado é <strong>permanente</strong> e não expira. Você pode usá-lo à vontade.
+            </div>
+        </div>
 
         <button class="btn voltar" onclick="window.location.href='index.html'">Voltar</button>
     </main>
@@ -24,8 +33,8 @@
     <footer>
         <p>&copy; 2026 Utillitys. Desenvolvido com ❤️ por <a href="https://github.com/akiradv" target="_blank">AkiraDev</a></p>
     </footer>
+
     <script src="script.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
         document.getElementById('generate-qr-code').addEventListener('click', () => {
             const inputValue = document.getElementById('qr-input').value.trim();
@@ -46,4 +55,4 @@
         });
     </script>
 </body>
-</html> 
+</html>
