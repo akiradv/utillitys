@@ -7,6 +7,67 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.remove('dark-mode');
     }
 
+    // === GERADOR DE SENHAS MODERNO ===
+    const passwordField = document.getElementById('password');
+    const lengthRange = document.getElementById('length-range');
+    const lengthNumber = document.getElementById('length-number');
+    const generateBtn = document.getElementById('generate-btn');
+    const showPasswordBtn = document.getElementById('show-password');
+    const copyPasswordBtn = document.getElementById('copy-password');
+
+    if (passwordField) {
+        if (lengthRange && lengthNumber) {
+            lengthRange.addEventListener('input', function() {
+                lengthNumber.value = this.value;
+                generatePassword();
+            });
+            lengthNumber.addEventListener('input', function() {
+                let val = parseInt(this.value) || 4;
+                if (val < 4) val = 4;
+                if (val > 32) val = 32;
+                this.value = val;
+                lengthRange.value = val;
+                generatePassword();
+            });
+        }
+
+        document.querySelectorAll('#include-uppercase, #include-lowercase, #include-numbers, #include-symbols').forEach(cb => {
+            cb.addEventListener('change', generatePassword);
+        });
+
+        if (generateBtn) {
+            generateBtn.addEventListener('click', generatePassword);
+        }
+
+        if (showPasswordBtn) {
+            showPasswordBtn.addEventListener('click', function() {
+                const input = document.getElementById('password');
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    this.innerHTML = '<i class="fas fa-eye-slash"></i>';
+                } else {
+                    input.type = 'password';
+                    this.innerHTML = '<i class="fas fa-eye"></i>';
+                }
+            });
+        }
+
+        if (copyPasswordBtn) {
+            copyPasswordBtn.addEventListener('click', function() {
+                const input = document.getElementById('password');
+                if (input.value) {
+                    navigator.clipboard.writeText(input.value)
+                        .then(() => showNotification('Senha copiada com sucesso!', 'success'))
+                        .catch(() => showNotification('Erro ao copiar.', 'error'));
+                } else {
+                    showNotification('Nenhuma senha para copiar.', 'error');
+                }
+            });
+        }
+
+        generatePassword();
+    }
+
     // === QR Code Generator ===
     const generateButton = document.getElementById('generate-qr-code');
     if (generateButton) {
@@ -29,88 +90,86 @@ document.addEventListener('DOMContentLoaded', () => {
         futureAgeButton.addEventListener('click', calculateFutureAge);
     }
 
-// === Busca de Livros (Open Library - Corrigido) ===
-const searchButton = document.getElementById('search-button');
-if (searchButton) {
-    searchButton.addEventListener('click', function() {
-        const title = document.getElementById('book-title').value.trim();
-        const resultsDiv = document.getElementById('results');
-        resultsDiv.innerHTML = '<p>🔍 Buscando...</p>';
+    // === Busca de Livros (Open Library) ===
+    const searchButton = document.getElementById('search-button');
+    if (searchButton) {
+        searchButton.addEventListener('click', function() {
+            const title = document.getElementById('book-title').value.trim();
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<p>🔍 Buscando...</p>';
 
-        if (!title) {
-            alert("Por favor, insira um título de livro!");
-            resultsDiv.innerHTML = '';
-            return;
-        }
-
-        // Construindo a URL sem o parâmetro 'limit' para evitar o erro 422
-        const url = `https://openlibrary.org/search.json?q=${encodeURIComponent(title)}`;
-
-        fetch(url, {
-            headers: {
-                'User-Agent': 'Utillitys-App/1.0' // <- Essencial para evitar bloqueios
+            if (!title) {
+                alert("Por favor, insira um título de livro!");
+                resultsDiv.innerHTML = '';
+                return;
             }
-        })
-        .then(response => {
-            if (!response.ok) {
-                // Se o status for 422, tenta novamente sem parâmetros extras
-                if (response.status === 422) {
-                    throw new Error('A API do Open Library rejeitou a requisição. Tente um termo de busca mais simples.');
+
+            const url = `https://openlibrary.org/search.json?q=${encodeURIComponent(title)}`;
+
+            fetch(url, {
+                headers: {
+                    'User-Agent': 'Utillitys-App/1.0'
                 }
-                throw new Error(`Erro na API: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            resultsDiv.innerHTML = '';
-            if (data.docs && data.docs.length > 0) {
-                data.docs.forEach(book => {
-                    const bookElement = document.createElement('div');
-                    bookElement.className = 'book-item';
+            })
+            .then(response => {
+                if (!response.ok) {
+                    if (response.status === 422) {
+                        throw new Error('A API do Open Library rejeitou a requisição. Tente um termo de busca mais simples.');
+                    }
+                    throw new Error(`Erro na API: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                resultsDiv.innerHTML = '';
+                if (data.docs && data.docs.length > 0) {
+                    data.docs.forEach(book => {
+                        const bookElement = document.createElement('div');
+                        bookElement.className = 'book-item';
 
-                    const coverId = book.cover_i;
-                    const coverUrl = coverId 
-                        ? `https://covers.openlibrary.org/b/id/${coverId}-M.jpg` 
-                        : 'https://via.placeholder.com/200x300?text=Sem+Capa';
+                        const coverId = book.cover_i;
+                        const coverUrl = coverId 
+                            ? `https://covers.openlibrary.org/b/id/${coverId}-M.jpg` 
+                            : 'https://via.placeholder.com/200x300?text=Sem+Capa';
 
-                    const authors = book.author_name ? book.author_name.join(', ') : 'Desconhecido';
-                    const year = book.first_publish_year || 'Ano desconhecido';
+                        const authors = book.author_name ? book.author_name.join(', ') : 'Desconhecido';
+                        const year = book.first_publish_year || 'Ano desconhecido';
 
-                    bookElement.innerHTML = `
-                        <img src="${coverUrl}" alt="${book.title}" onerror="this.src='https://via.placeholder.com/200x300?text=Sem+Imagem'">
-                        <h3>${book.title}</h3>
-                        <p><strong>Autores:</strong> ${authors}</p>
-                        <p><strong>Publicado:</strong> ${year}</p>
-                        <p>${book.first_sentence ? book.first_sentence[0] : 'Sem descrição disponível.'}</p>
-                        <a href="https://openlibrary.org${book.key}" target="_blank">Ver no Open Library</a>
-                    `;
-                    resultsDiv.appendChild(bookElement);
-                });
-            } else {
-                resultsDiv.innerHTML = '<p>📭 Nenhum livro encontrado.</p>';
-            }
-        })
-        .catch(error => {
-            console.error('Erro ao buscar livros:', error);
-            resultsDiv.innerHTML = `<p>❌ Erro ao buscar livros: ${error.message}. Tente novamente mais tarde.</p>`;
+                        bookElement.innerHTML = `
+                            <img src="${coverUrl}" alt="${book.title}" onerror="this.src='https://via.placeholder.com/200x300?text=Sem+Imagem'" loading="lazy">
+                            <h3>${book.title}</h3>
+                            <p><strong>Autores:</strong> ${authors}</p>
+                            <p><strong>Publicado:</strong> ${year}</p>
+                            <p>${book.first_sentence ? book.first_sentence[0] : 'Sem descrição disponível.'}</p>
+                            <a href="https://openlibrary.org${book.key}" target="_blank">Ver no Open Library</a>
+                        `;
+                        resultsDiv.appendChild(bookElement);
+                    });
+                } else {
+                    resultsDiv.innerHTML = '<p>📭 Nenhum livro encontrado.</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao buscar livros:', error);
+                resultsDiv.innerHTML = `<p>❌ Erro ao buscar livros: ${error.message}. Tente novamente mais tarde.</p>`;
+            });
         });
-    });
-}
+    }
 
-// Filtro de busca
-const searchInput = document.getElementById('searchInput');
-if (searchInput) {
-    searchInput.addEventListener('input', function() {
-        const term = this.value.toLowerCase().trim();
-        const cards = document.querySelectorAll('.utilidade-card');
-        cards.forEach(card => {
-            const title = card.querySelector('h3')?.textContent?.toLowerCase() || '';
-            const desc = card.querySelector('p')?.textContent?.toLowerCase() || '';
-            const match = title.includes(term) || desc.includes(term);
-            card.style.display = match ? '' : 'none';
+    // === Filtro de busca ===
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const term = this.value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.utilidade-card');
+            cards.forEach(card => {
+                const title = card.querySelector('h3')?.textContent?.toLowerCase() || '';
+                const desc = card.querySelector('p')?.textContent?.toLowerCase() || '';
+                const match = title.includes(term) || desc.includes(term);
+                card.style.display = match ? '' : 'none';
+            });
         });
-    });
-}
+    }
 
     // === Encurtador de URL ===
     const shortenBtn = document.getElementById('shorten-button');
@@ -144,175 +203,175 @@ if (searchInput) {
         }
     }
 
-// ============================================
-// TEXTO PARA VOZ (CORRIGIDO)
-// ============================================
-const speakBtn = document.getElementById('tts-speak');
-const stopBtn = document.getElementById('tts-stop');
-const downloadBtn = document.getElementById('tts-download');
-const textarea = document.getElementById('tts-text');
-const langSelect = document.getElementById('tts-lang');
-const rateRange = document.getElementById('tts-rate');
-const rateLabel = document.getElementById('rate-label');
-const statusDiv = document.getElementById('tts-status');
+    // ============================================
+    // TEXTO PARA VOZ (CORRIGIDO)
+    // ============================================
+    const speakBtn = document.getElementById('tts-speak');
+    const stopBtn = document.getElementById('tts-stop');
+    const downloadBtn = document.getElementById('tts-download');
+    const textarea = document.getElementById('tts-text');
+    const langSelect = document.getElementById('tts-lang');
+    const rateRange = document.getElementById('tts-rate');
+    const rateLabel = document.getElementById('rate-label');
+    const statusDiv = document.getElementById('tts-status');
 
-// Se não existir o botão falar, não está na página TTS
-if (speakBtn) {
-    // Atualiza label da velocidade
-    if (rateRange && rateLabel) {
-        rateRange.addEventListener('input', function() {
-            rateLabel.textContent = parseFloat(this.value).toFixed(1) + 'x';
-        });
-    }
-
-    let utterance = null;
-    let isSpeaking = false;
-    let audioBlob = null;
-
-    // Função para gerar o áudio para download (usando Google TTS)
-    function gerarAudioParaDownload(texto, idioma) {
-        const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(texto)}&tl=${idioma}&client=tw-ob`;
-        if (statusDiv) statusDiv.textContent = '⏳ Gerando áudio para download...';
-
-        fetch(url, {
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-            }
-        })
-        .then(response => {
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            return response.blob();
-        })
-        .then(blob => {
-            audioBlob = blob;
-            if (downloadBtn) {
-                downloadBtn.style.display = 'inline-flex';
-                downloadBtn.textContent = '⬇ Baixar Áudio (MP3)';
-            }
-            if (statusDiv) statusDiv.textContent = '✅ Áudio gerado! Clique em "Baixar Áudio" para salvar.';
-        })
-        .catch(error => {
-            console.error('Erro ao gerar áudio:', error);
-            if (statusDiv) statusDiv.textContent = '⚠️ Não foi possível gerar o arquivo de áudio. A fala ainda funciona normalmente.';
-            if (downloadBtn) downloadBtn.style.display = 'none';
-        });
-    }
-
-    // Botão FALAR
-    speakBtn.addEventListener('click', function() {
-        const text = textarea ? textarea.value.trim() : '';
-        if (!text) {
-            if (statusDiv) statusDiv.textContent = '⚠️ Digite algum texto primeiro.';
-            return;
+    if (speakBtn) {
+        if (rateRange && rateLabel) {
+            rateRange.addEventListener('input', function() {
+                rateLabel.textContent = parseFloat(this.value).toFixed(1) + 'x';
+            });
         }
 
-        // Cancela qualquer fala anterior
-        if (window.speechSynthesis.speaking) {
-            window.speechSynthesis.cancel();
-        }
+        let utterance = null;
+        let isSpeaking = false;
+        let audioBlob = null;
 
-        const lang = langSelect ? langSelect.value : 'en-US';
-        const rate = rateRange ? parseFloat(rateRange.value) : 1;
+        function gerarAudioParaDownload(texto, idioma) {
+            const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(texto)}&tl=${idioma}&client=tw-ob`;
+            if (statusDiv) statusDiv.textContent = '⏳ Gerando áudio para download...';
 
-        // Verifica se a API de fala está disponível
-        if (!window.speechSynthesis) {
-            if (statusDiv) statusDiv.textContent = '❌ Seu navegador não suporta síntese de voz.';
-            return;
-        }
-
-        // Cria a utterance
-        utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = lang;
-        utterance.rate = rate;
-
-        // Eventos
-        utterance.onstart = function() {
-            isSpeaking = true;
-            if (statusDiv) statusDiv.textContent = '🔊 Falando...';
-            speakBtn.disabled = true;
-            speakBtn.textContent = '⏳ Falando...';
-            if (downloadBtn) downloadBtn.style.display = 'none';
-        };
-
-        utterance.onend = function() {
-            isSpeaking = false;
-            if (statusDiv) statusDiv.textContent = '✅ Fala concluída! Gerando áudio...';
-            speakBtn.disabled = false;
-            speakBtn.textContent = '▶ Falar';
-            // Gera o áudio para download automaticamente
-            gerarAudioParaDownload(text, lang);
-        };
-
-        utterance.onerror = function(event) {
-            isSpeaking = false;
-            if (statusDiv) statusDiv.textContent = '❌ Erro na fala: ' + event.error;
-            speakBtn.disabled = false;
-            speakBtn.textContent = '▶ Falar';
-            console.error('Erro na fala:', event);
-            // Mesmo com erro, tenta gerar o áudio para download
-            gerarAudioParaDownload(text, lang);
-        };
-
-        // Tenta falar
-        try {
-            window.speechSynthesis.speak(utterance);
-
-            // Fallback: se após 2 segundos não estiver falando, força a geração do áudio
-            setTimeout(() => {
-                if (!isSpeaking && !window.speechSynthesis.speaking) {
-                    if (statusDiv) statusDiv.textContent = '⚠️ A fala pode não estar disponível, mas você pode baixar o áudio.';
-                    speakBtn.disabled = false;
-                    speakBtn.textContent = '▶ Falar';
-                    gerarAudioParaDownload(text, lang);
+            fetch(url, {
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
                 }
-            }, 2000);
-        } catch (e) {
-            if (statusDiv) statusDiv.textContent = '❌ Erro ao iniciar fala: ' + e.message;
-            speakBtn.disabled = false;
-            speakBtn.textContent = '▶ Falar';
-            console.error(e);
-            gerarAudioParaDownload(text, lang);
+            })
+            .then(response => {
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                return response.blob();
+            })
+            .then(blob => {
+                audioBlob = blob;
+                if (downloadBtn) {
+                    downloadBtn.style.display = 'inline-flex';
+                    downloadBtn.textContent = '⬇ Baixar Áudio (MP3)';
+                }
+                if (statusDiv) statusDiv.textContent = '✅ Áudio gerado! Clique em "Baixar Áudio" para salvar.';
+            })
+            .catch(error => {
+                console.error('Erro ao gerar áudio:', error);
+                if (statusDiv) statusDiv.textContent = '⚠️ Não foi possível gerar o arquivo de áudio. A fala ainda funciona normalmente.';
+                if (downloadBtn) downloadBtn.style.display = 'none';
+            });
         }
-    });
 
-    // Botão PARAR
-    if (stopBtn) {
-        stopBtn.addEventListener('click', function() {
+        speakBtn.addEventListener('click', function() {
+            const text = textarea ? textarea.value.trim() : '';
+            if (!text) {
+                if (statusDiv) statusDiv.textContent = '⚠️ Digite algum texto primeiro.';
+                return;
+            }
+
             if (window.speechSynthesis.speaking) {
                 window.speechSynthesis.cancel();
             }
-            isSpeaking = false;
-            if (statusDiv) statusDiv.textContent = '⏹ Parado.';
-            speakBtn.disabled = false;
-            speakBtn.textContent = '▶ Falar';
-            if (downloadBtn) downloadBtn.style.display = 'none';
-        });
-    }
 
-    // Botão BAIXAR ÁUDIO
-    if (downloadBtn) {
-        downloadBtn.addEventListener('click', function() {
-            if (audioBlob) {
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(audioBlob);
-                link.download = 'audio.mp3';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                setTimeout(() => URL.revokeObjectURL(link.href), 5000);
-            } else {
-                alert('Áudio ainda não disponível. Fale o texto primeiro ou clique em "Falar" para gerar.');
+            const lang = langSelect ? langSelect.value : 'en-US';
+            const rate = rateRange ? parseFloat(rateRange.value) : 1;
+
+            if (!window.speechSynthesis) {
+                if (statusDiv) statusDiv.textContent = '❌ Seu navegador não suporta síntese de voz.';
+                return;
+            }
+
+            utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = lang;
+            utterance.rate = rate;
+
+            utterance.onstart = function() {
+                isSpeaking = true;
+                if (statusDiv) statusDiv.textContent = '🔊 Falando...';
+                speakBtn.disabled = true;
+                speakBtn.textContent = '⏳ Falando...';
+                if (downloadBtn) downloadBtn.style.display = 'none';
+            };
+
+            utterance.onend = function() {
+                isSpeaking = false;
+                if (statusDiv) statusDiv.textContent = '✅ Fala concluída! Gerando áudio...';
+                speakBtn.disabled = false;
+                speakBtn.textContent = '▶ Falar';
+                gerarAudioParaDownload(text, lang);
+            };
+
+            utterance.onerror = function(event) {
+                isSpeaking = false;
+                if (statusDiv) statusDiv.textContent = '❌ Erro na fala: ' + event.error;
+                speakBtn.disabled = false;
+                speakBtn.textContent = '▶ Falar';
+                console.error('Erro na fala:', event);
+                gerarAudioParaDownload(text, lang);
+            };
+
+            try {
+                window.speechSynthesis.speak(utterance);
+                setTimeout(() => {
+                    if (!isSpeaking && !window.speechSynthesis.speaking) {
+                        if (statusDiv) statusDiv.textContent = '⚠️ A fala pode não estar disponível, mas você pode baixar o áudio.';
+                        speakBtn.disabled = false;
+                        speakBtn.textContent = '▶ Falar';
+                        gerarAudioParaDownload(text, lang);
+                    }
+                }, 2000);
+            } catch (e) {
+                if (statusDiv) statusDiv.textContent = '❌ Erro ao iniciar fala: ' + e.message;
+                speakBtn.disabled = false;
+                speakBtn.textContent = '▶ Falar';
+                console.error(e);
+                gerarAudioParaDownload(text, lang);
             }
         });
-    }
-}
 
-    // === Corretor Ortográfico ===
+        if (stopBtn) {
+            stopBtn.addEventListener('click', function() {
+                if (window.speechSynthesis.speaking) {
+                    window.speechSynthesis.cancel();
+                }
+                isSpeaking = false;
+                if (statusDiv) statusDiv.textContent = '⏹ Parado.';
+                speakBtn.disabled = false;
+                speakBtn.textContent = '▶ Falar';
+                if (downloadBtn) downloadBtn.style.display = 'none';
+            });
+        }
+
+        if (downloadBtn) {
+            downloadBtn.addEventListener('click', function() {
+                if (audioBlob) {
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(audioBlob);
+                    link.download = 'audio.mp3';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    setTimeout(() => URL.revokeObjectURL(link.href), 5000);
+                } else {
+                    alert('Áudio ainda não disponível. Fale o texto primeiro ou clique em "Falar" para gerar.');
+                }
+            });
+        }
+    }
+
+    // === CORRETOR ORTOGRÁFICO (melhorado) ===
     const checkButton = document.getElementById('check-button');
     if (checkButton) {
         checkButton.addEventListener('click', function() {
-            let textInput = document.getElementById('text-input').value;
-            textInput = textInput.replace(/[.,!?;:]/g, '');
+            const textInput = document.getElementById('text-input');
+            const resultDiv = document.getElementById('result');
+            const text = textInput.value.trim();
+
+            if (!text) {
+                resultDiv.innerHTML = '⚠️ Digite algum texto para verificar.';
+                resultDiv.style.display = 'block';
+                resultDiv.style.borderLeftColor = '#f39c12';
+                return;
+            }
+
+            resultDiv.innerHTML = '⏳ Verificando ortografia...';
+            resultDiv.style.display = 'block';
+            resultDiv.style.borderLeftColor = '#3498db';
+
+            // Remove pontuação para melhor análise
+            const cleanText = text.replace(/[.,!?;:]/g, '');
 
             fetch('https://api.languagetoolplus.com/v2/check', {
                 method: 'POST',
@@ -320,34 +379,49 @@ if (speakBtn) {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: new URLSearchParams({
-                    'text': textInput,
+                    'text': cleanText,
                     'language': 'pt-BR'
                 })
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) throw new Error('Erro na API');
+                return response.json();
+            })
             .then(data => {
                 const matches = data.matches;
-                const resultDiv = document.getElementById('result');
-
                 if (matches.length > 0) {
-                    const incorrectWords = matches.map(match => {
-                        return {
-                            word: match.context.text.substring(match.context.offset, match.context.offset + match.context.length),
-                            suggestions: match.replacements.map(rep => rep.value).join(', ')
-                        };
+                    let html = '<p><strong>🔍 Palavras com possíveis erros:</strong></p>';
+                    matches.forEach(match => {
+                        const word = match.context.text.substring(match.context.offset, match.context.offset + match.context.length);
+                        const suggestions = match.replacements.map(rep => rep.value).join(', ');
+                        html += `
+                            <div style="margin:6px 0; padding:6px 10px; background:var(--bg-input); border-radius:6px;">
+                                <span class="error-word">${word}</span>
+                                → <span class="suggestion">${suggestions || 'Sem sugestões'}</span>
+                                ${match.message ? `<br><small style="color:var(--text-muted);">${match.message}</small>` : ''}
+                            </div>
+                        `;
                     });
-                    resultDiv.innerHTML = "Palavras incorretas:<br>" + incorrectWords.map(item =>
-                        `${item.word} (Sugestões: ${item.suggestions})`
-                    ).join('<br>');
+                    resultDiv.innerHTML = html;
+                    resultDiv.style.borderLeftColor = '#e74c3c';
                 } else {
-                    resultDiv.innerHTML = "Nenhuma palavra incorreta encontrada.";
+                    resultDiv.innerHTML = '<p class="no-errors">✅ Nenhum erro ortográfico encontrado!</p>';
+                    resultDiv.style.borderLeftColor = '#2ecc71';
                 }
             })
             .catch(error => {
                 console.error('Erro:', error);
-                document.getElementById('result').innerHTML = "Erro ao verificar a ortografia.";
+                resultDiv.innerHTML = '❌ Erro ao verificar a ortografia. Tente novamente mais tarde.';
+                resultDiv.style.borderLeftColor = '#e74c3c';
             });
         });
+    }
+
+    // === Contador de caracteres/palavras (adicionado ao textarea do ortografia) ===
+    const textInputSpell = document.getElementById('text-input');
+    if (textInputSpell) {
+        textInputSpell.addEventListener('input', updateTextStats);
+        updateTextStats();
     }
 
     // === Calcular Ano de Nascimento ===
@@ -355,44 +429,215 @@ if (speakBtn) {
     if (birthyearBtn) {
         birthyearBtn.addEventListener('click', calculateBirthYear);
     }
+
+    // === TOGGLE DE VISUALIZAÇÃO (página inicial) ===
+    const grid = document.querySelector('.utilidade-grid');
+    const btnCompact = document.getElementById('btn-compact');
+    const btnExpand = document.getElementById('btn-expand');
+
+    if (grid && btnCompact && btnExpand) {
+        const modo = localStorage.getItem('viewMode') || 'expand';
+        if (modo === 'compact') {
+            grid.classList.add('compact');
+            btnCompact.classList.add('active');
+            btnExpand.classList.remove('active');
+        } else {
+            grid.classList.remove('compact');
+            btnExpand.classList.add('active');
+            btnCompact.classList.remove('active');
+        }
+
+        btnCompact.addEventListener('click', function() {
+            grid.classList.add('compact');
+            btnCompact.classList.add('active');
+            btnExpand.classList.remove('active');
+            localStorage.setItem('viewMode', 'compact');
+        });
+
+        btnExpand.addEventListener('click', function() {
+            grid.classList.remove('compact');
+            btnExpand.classList.add('active');
+            btnCompact.classList.remove('active');
+            localStorage.setItem('viewMode', 'expand');
+        });
+    }
+
+    // === Conversor de Moedas ===
+    const convertBtn = document.getElementById('convert-btn');
+    if (convertBtn) {
+        convertBtn.addEventListener('click', converterMoeda);
+        converterMoeda();
+    }
 });
 
 // =====================================================
-// FUNÇÕES GLOBAIS (usadas em várias páginas)
+// FUNÇÕES GLOBAIS
 // =====================================================
+
+// ============================================
+// CALCULADORA MELHORADA
+// ============================================
+let calcHistory = [];
 
 function appendToCalc(value) {
     const input = document.getElementById('calcInput');
-    if (input) input.value += value;
+    const expression = document.getElementById('calcExpression');
+    if (!input) return;
+
+    const operators = ['+', '-', '*', '/', '%'];
+    const lastChar = input.value.slice(-1);
+    if (operators.includes(value) && operators.includes(lastChar)) {
+        input.value = input.value.slice(0, -1) + value;
+        return;
+    }
+
+    input.value += value;
+
+    if (expression) {
+        let displayExpr = input.value
+            .replace(/\*/g, '×')
+            .replace(/\//g, '÷')
+            .replace(/-/g, '−');
+        expression.textContent = displayExpr;
+    }
+
+    updateTextStats();
 }
 
 function calculate() {
     const input = document.getElementById('calcInput');
-    if (!input) return;
+    const expression = document.getElementById('calcExpression');
+    if (!input || !input.value) return;
+
     try {
-        input.value = Function('"use strict";return (' + input.value + ')')();
+        let expr = input.value.replace(/%/g, '/100');
+        const result = Function('"use strict";return (' + expr + ')')();
+
+        const historyItem = `${input.value} = ${result}`;
+        calcHistory.push(historyItem);
+        if (calcHistory.length > 10) calcHistory.shift();
+        updateHistory();
+
+        if (expression) expression.textContent = input.value + ' =';
+        input.value = result;
+
+        updateTextStats();
     } catch {
         input.value = 'Erro';
+        if (expression) expression.textContent = '';
+        setTimeout(() => {
+            input.value = '';
+            if (expression) expression.textContent = '';
+        }, 1500);
     }
 }
 
 function clearCalc() {
     const input = document.getElementById('calcInput');
+    const expression = document.getElementById('calcExpression');
     if (input) input.value = '';
+    if (expression) expression.textContent = '';
+    updateTextStats();
 }
 
+function deleteLast() {
+    const input = document.getElementById('calcInput');
+    const expression = document.getElementById('calcExpression');
+    if (!input) return;
+    input.value = input.value.slice(0, -1);
+    if (expression) {
+        expression.textContent = input.value
+            .replace(/\*/g, '×')
+            .replace(/\//g, '÷')
+            .replace(/-/g, '−');
+    }
+    updateTextStats();
+}
+
+function updateHistory() {
+    const list = document.getElementById('historyList');
+    if (!list) return;
+    list.innerHTML = calcHistory.map(item => `<li>${item}</li>`).join('');
+}
+
+// ============================================
+// CONTADOR DE TEXTO (para verificador ortográfico e calculadora)
+// ============================================
+function updateTextStats() {
+    const textarea = document.getElementById('text-input');
+    const charCount = document.getElementById('charCount');
+    const wordCount = document.getElementById('wordCount');
+    if (textarea && charCount && wordCount) {
+        const text = textarea.value;
+        charCount.textContent = text.length;
+        const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+        wordCount.textContent = words;
+    }
+}
+
+// ============================================
+// GERADOR DE SENHAS (MODERNO)
+// ============================================
 function generatePassword() {
-    const length = 12;
-    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+";
-    let password = "";
+    const passwordField = document.getElementById('password');
+    if (!passwordField) return;
+
+    const length = parseInt(document.getElementById('length-range')?.value) || 12;
+    const includeUpper = document.getElementById('include-uppercase')?.checked ?? true;
+    const includeLower = document.getElementById('include-lowercase')?.checked ?? true;
+    const includeNumbers = document.getElementById('include-numbers')?.checked ?? true;
+    const includeSymbols = document.getElementById('include-symbols')?.checked ?? true;
+
+    let charset = '';
+    if (includeUpper) charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    if (includeLower) charset += 'abcdefghijklmnopqrstuvwxyz';
+    if (includeNumbers) charset += '0123456789';
+    if (includeSymbols) charset += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+
+    if (charset === '') {
+        alert('Selecione pelo menos um tipo de caractere.');
+        return;
+    }
+
+    let password = '';
     for (let i = 0; i < length; i++) {
         const randomIndex = Math.floor(Math.random() * charset.length);
         password += charset[randomIndex];
     }
-    const passwordField = document.getElementById('password');
-    if (passwordField) passwordField.value = password;
+
+    passwordField.value = password;
+    updateStrength(password);
 }
 
+function updateStrength(password) {
+    const bar = document.getElementById('strength-bar-fill');
+    const text = document.getElementById('strength-text');
+    if (!bar || !text) return;
+
+    let score = 0;
+    const len = password.length;
+    if (len >= 8) score += 1;
+    if (len >= 12) score += 1;
+    if (/[a-z]/.test(password)) score += 1;
+    if (/[A-Z]/.test(password)) score += 1;
+    if (/\d/.test(password)) score += 1;
+    if (/[^a-zA-Z0-9]/.test(password)) score += 1;
+
+    let percent, label, color;
+    if (score <= 2) { percent = 20; label = 'Fraca'; color = '#e74c3c'; }
+    else if (score <= 3) { percent = 45; label = 'Média'; color = '#f39c12'; }
+    else if (score <= 4) { percent = 70; label = 'Forte'; color = '#2ecc71'; }
+    else { percent = 100; label = 'Muito Forte'; color = '#27ae60'; }
+
+    bar.style.width = percent + '%';
+    bar.style.background = color;
+    text.textContent = label;
+    text.style.color = color;
+}
+
+// ============================================
+// OUTRAS FUNÇÕES
+// ============================================
 function togglePasswordVisibility() {
     const passwordInput = document.getElementById('password');
     const showPasswordButton = document.getElementById('show-password');
@@ -407,7 +652,6 @@ function togglePasswordVisibility() {
 }
 
 function copyToClipboard(text) {
-    // Para senha (sem argumento) ou URL encurtada (com argumento)
     const textToCopy = text || document.getElementById('password')?.value || '';
     if (!textToCopy) {
         showNotification("Nada para copiar.", "error");
@@ -425,7 +669,6 @@ function copyToClipboard(text) {
 function showNotification(message, type) {
     const container = document.getElementById('notificationsContainer');
     if (!container) {
-        // fallback: alert simples
         alert(message);
         return;
     }
@@ -608,46 +851,7 @@ function calculateIMC() {
     resultado.innerHTML = `<p>Seu IMC é <strong>${imc.toFixed(2)}</strong> - ${classificacao}</p>`;
 }
 
-// =====================================================
-// TOGGLE DE VISUALIZAÇÃO (somente na página inicial)
-// =====================================================
-document.addEventListener('DOMContentLoaded', function() {
-    const grid = document.querySelector('.utilidade-grid');
-    const btnCompact = document.getElementById('btn-compact');
-    const btnExpand = document.getElementById('btn-expand');
-
-    // Só executa se os elementos existirem (página inicial)
-    if (grid && btnCompact && btnExpand) {
-        const modo = localStorage.getItem('viewMode') || 'expand';
-        if (modo === 'compact') {
-            grid.classList.add('compact');
-            btnCompact.classList.add('active');
-            btnExpand.classList.remove('active');
-        } else {
-            grid.classList.remove('compact');
-            btnExpand.classList.add('active');
-            btnCompact.classList.remove('active');
-        }
-
-        btnCompact.addEventListener('click', function() {
-            console.log('Clicou em Compactado');
-            grid.classList.add('compact');
-            btnCompact.classList.add('active');
-            btnExpand.classList.remove('active');
-            localStorage.setItem('viewMode', 'compact');
-        });
-
-        btnExpand.addEventListener('click', function() {
-            console.log('Clicou em Expandido');
-            grid.classList.remove('compact');
-            btnExpand.classList.add('active');
-            btnCompact.classList.remove('active');
-            localStorage.setItem('viewMode', 'expand');
-        });
-    }
-});
-
-// Relógio Mundial (melhorado)
+// Relógio Mundial
 function updateClocks() {
     const now = new Date();
     const localOffsetMinutes = now.getTimezoneOffset();
@@ -721,12 +925,13 @@ function updateClocks() {
     });
 }
 
-// Inicialização
+// Inicialização do relógio mundial
 if (document.getElementById('clock-container')) {
     updateClocks();
     setInterval(updateClocks, 1000);
 }
 
+// Gerador de Currículo
 function gerarCurriculo() {
     const nome = document.getElementById('nome').value.trim();
     if (!nome) {
@@ -741,7 +946,6 @@ function gerarCurriculo() {
     const formacao = document.getElementById('formacao').value.trim();
     const habilidades = document.getElementById('habilidades').value.trim();
 
-    // Verificar se há foto
     const fotoInput = document.getElementById('foto');
     if (fotoInput.files && fotoInput.files[0]) {
         const reader = new FileReader();
@@ -756,7 +960,6 @@ function gerarCurriculo() {
 }
 
 function gerarHTMLCurriculo(nome, email, telefone, endereco, resumo, experiencia, formacao, habilidades, fotoBase64) {
-    // Monta a foto (se houver)
     const fotoHTML = fotoBase64 ? `
         <img src="${fotoBase64}" alt="Foto" style="width:120px; height:120px; border-radius:50%; object-fit:cover; float:right; margin-left:20px; border:3px solid #ff5722;">
     ` : '';
@@ -786,7 +989,6 @@ function gerarHTMLCurriculo(nome, email, telefone, endereco, resumo, experiencia
 function imprimirCurriculo() {
     const content = document.getElementById('resume-content').innerHTML;
     const nome = document.getElementById('nome').value.trim() || 'curriculo';
-    // Remove espaços e caracteres especiais para o nome do arquivo
     const nomeArquivo = `curriculo_${nome.replace(/[^a-zA-Z0-9]/g, '_')}`;
 
     const win = window.open('', '_blank');
@@ -811,13 +1013,9 @@ function imprimirCurriculo() {
 function voltarFormulario() {
     document.getElementById('resume-preview').style.display = 'none';
     document.querySelector('.resume-form').style.display = 'block';
-    // Opcional: limpa os campos se quiser
-    // document.getElementById('resume-form').reset();
 }
 
-// ============================================
-// CONVERSOR DE MOEDAS
-// ============================================
+// Conversor de Moedas
 async function converterMoeda() {
     const amount = parseFloat(document.getElementById('amount').value);
     const fromCurrency = document.getElementById('from-currency').value;
@@ -831,7 +1029,6 @@ async function converterMoeda() {
     }
 
     try {
-        // Usa a API gratuita (ExchangeRate-API)
         const response = await fetch(`https://api.exchangerate-api.com/v4/latest/${fromCurrency}`);
         if (!response.ok) throw new Error('Falha ao buscar taxas');
         const data = await response.json();
@@ -852,13 +1049,3 @@ async function converterMoeda() {
         rateInfo.textContent = '';
     }
 }
-
-// Adiciona evento ao botão de conversão (se existir)
-document.addEventListener('DOMContentLoaded', () => {
-    const convertBtn = document.getElementById('convert-btn');
-    if (convertBtn) {
-        convertBtn.addEventListener('click', converterMoeda);
-        // Conversão automática ao carregar a página
-        converterMoeda();
-    }
-});

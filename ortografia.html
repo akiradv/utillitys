@@ -4,29 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verificador de Ortografia - Utillitys</title>
+    <meta name="description" content="Verifique a ortografia de textos em português usando a API LanguageTool.">
+    <!-- Open Graph -->
+    <meta property="og:title" content="Verificador de Ortografia - Utillitys">
+    <meta property="og:description" content="Corrija seus textos com facilidade usando o LanguageTool.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://akiradv.github.io/utillitys/ortografia.html">
+    <meta property="og:image" content="https://akiradv.github.io/utillitys/images/og-spellcheck.png">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Verificador de Ortografia - Utillitys">
+    <meta name="twitter:description" content="Verifique e corrija seus textos em português.">
+    <meta name="twitter:image" content="https://akiradv.github.io/utillitys/images/og-spellcheck.png">
+    <!-- Estilos -->
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/icon-192.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Utillitys">
-    <link rel="apple-touch-icon" href="images/icon-192.png">
 </head>
 <body>
+    <header>
+        <h1>✍️ Verificador de Ortografia</h1>
+        <a href="index.html" class="btn-voltar">← Voltar</a>
+    </header>
+
     <main>
-        <h1>Verificador de Ortografia</h1>
-        <p class="api-info">Usamos a API do <a href="https://languagetool.org/" target="_blank">LanguageTool</a> para verificar a ortografia. (Pode haver erros!)</p>
-        <textarea id="text-input" rows="10" cols="50" placeholder="Digite seu texto aqui..."></textarea>
-        <button id="check-button" class="btn">Verificar Ortografia</button>
-        <div id="result"></div>
-        
-        <!-- Botão de Voltar -->
-        <button class="btn voltar" onclick="window.location.href='index.html'">Voltar para a Página Inicial</button>
+        <div class="spellcheck-container">
+            <div class="spellcheck-info">
+                <i class="fas fa-info-circle"></i>
+                <span>Usamos a API do <a href="https://languagetool.org/" target="_blank">LanguageTool</a> para verificar a ortografia em português.</span>
+            </div>
+
+            <div class="spellcheck-input-group">
+                <label for="text-input">Digite seu texto:</label>
+                <textarea id="text-input" rows="6" placeholder="Escreva ou cole seu texto aqui..."></textarea>
+            </div>
+
+            <button id="check-button" class="btn btn-primary">
+                <i class="fas fa-spell-check"></i> Verificar Ortografia
+            </button>
+
+            <div id="result" class="spellcheck-result">
+                <p class="placeholder">📝 Os resultados aparecerão aqui.</p>
+            </div>
+
+            <button class="btn voltar" onclick="window.location.href='index.html'">Voltar</button>
+        </div>
     </main>
 
     <footer>
-        <p>&copy; 2026 Utillitys. Desenvolvido com ❤️ por <a href="https://github.com/akiradv" target="_blank">AkiraDev</a> </p>
+        <p>&copy; 2026 Utillitys. Desenvolvido com ❤️ por <a href="https://github.com/akiradv" target="_blank">AkiraDev</a></p>
     </footer>
 
     <script src="script.js"></script>
+    <div id="notificationsContainer"></div>
 </body>
 </html>

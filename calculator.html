@@ -4,43 +4,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora - Utillitys</title>
+    <meta name="description" content="Calculadora simples com operações básicas e histórico.">
+    <!-- Open Graph -->
+    <meta property="og:title" content="Calculadora - Utillitys">
+    <meta property="og:description" content="Realize cálculos matemáticos básicos de forma rápida e fácil.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://akiradv.github.io/utillitys/calculator.html">
+    <meta property="og:image" content="https://akiradv.github.io/utillitys/images/og-calculator.png">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Calculadora - Utillitys">
+    <meta name="twitter:description" content="Calculadora simples e funcional para o dia a dia.">
+    <meta name="twitter:image" content="https://akiradv.github.io/utillitys/images/og-calculator.png">
+    <!-- Estilos -->
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/icon-192.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Utillitys">
-    <link rel="apple-touch-icon" href="images/icon-192.png">
 </head>
 <body>
+    <header>
+        <h1>🧮 Calculadora</h1>
+        <a href="index.html" class="btn-voltar">← Voltar</a>
+    </header>
+
     <main>
-        <h1>Calculadora</h1>
-        <div class="calculator">
-            <input type="text" id="calcInput" disabled>
-            <div class="calc-buttons">
-                <button onclick="appendToCalc('1')">1</button>
-                <button onclick="appendToCalc('2')">2</button>
-                <button onclick="appendToCalc('3')">3</button>
-                <button onclick="appendToCalc('+')">+</button>
-                <button onclick="appendToCalc('4')">4</button>
-                <button onclick="appendToCalc('5')">5</button>
-                <button onclick="appendToCalc('6')">6</button>
-                <button onclick="appendToCalc('-')">-</button>
-                <button onclick="appendToCalc('7')">7</button>
-                <button onclick="appendToCalc('8')">8</button>
-                <button onclick="appendToCalc('9')">9</button>
-                <button onclick="appendToCalc('*')">*</button>
-                <button onclick="appendToCalc('0')">0</button>
-                <button onclick="calculate()">=</button>
-                <button onclick="clearCalc()">C</button>
-                <button onclick="appendToCalc('/')">/</button>
+        <div class="calculator-modern">
+            <!-- Display -->
+            <div class="calc-display">
+                <div id="calc-history" class="calc-history"></div>
+                <input type="text" id="calcInput" readonly>
+            </div>
+
+            <!-- Botões -->
+            <div class="calc-buttons-modern">
+                <button onclick="appendToCalc('7')" class="calc-btn number">7</button>
+                <button onclick="appendToCalc('8')" class="calc-btn number">8</button>
+                <button onclick="appendToCalc('9')" class="calc-btn number">9</button>
+                <button onclick="appendToCalc('÷')" class="calc-btn operator">÷</button>
+
+                <button onclick="appendToCalc('4')" class="calc-btn number">4</button>
+                <button onclick="appendToCalc('5')" class="calc-btn number">5</button>
+                <button onclick="appendToCalc('6')" class="calc-btn number">6</button>
+                <button onclick="appendToCalc('×')" class="calc-btn operator">×</button>
+
+                <button onclick="appendToCalc('1')" class="calc-btn number">1</button>
+                <button onclick="appendToCalc('2')" class="calc-btn number">2</button>
+                <button onclick="appendToCalc('3')" class="calc-btn number">3</button>
+                <button onclick="appendToCalc('-')" class="calc-btn operator">−</button>
+
+                <button onclick="appendToCalc('0')" class="calc-btn number zero">0</button>
+                <button onclick="appendToCalc('.')" class="calc-btn number">.</button>
+                <button onclick="clearCalc()" class="calc-btn clear">C</button>
+                <button onclick="calculate()" class="calc-btn equals">=</button>
+
+                <button onclick="appendToCalc('(')" class="calc-btn function">(</button>
+                <button onclick="appendToCalc(')')" class="calc-btn function">)</button>
+                <button onclick="appendToCalc('%')" class="calc-btn function">%</button>
+                <button onclick="appendToCalc('+')" class="calc-btn operator">+</button>
+            </div>
+
+            <!-- Botão extra: limpar histórico (se implementarmos) -->
+            <div style="margin-top: 12px; text-align: center;">
+                <button onclick="clearHistory()" class="btn btn-small" style="background:#555;">🗑️ Limpar Histórico</button>
             </div>
         </div>
+
         <button class="btn voltar" onclick="window.location.href='index.html'">Voltar</button>
     </main>
 
     <footer>
-        <p>&copy; 2026 Utillitys. Desenvolvido com ❤️ por <a href="https://github.com/akiradv" target="_blank">AkiraDev</a> </p>
+        <p>&copy; 2026 Utillitys. Desenvolvido com ❤️ por <a href="https://github.com/akiradv" target="_blank">AkiraDev</a></p>
     </footer>
 
     <script src="script.js"></script>
